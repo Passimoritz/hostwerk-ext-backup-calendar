@@ -1,0 +1,20 @@
+{
+  "title": "Backup-Kalender",
+  "loading": "Lade …",
+  "summary": "{n} Termine in den nächsten {days} Tagen",
+  "none": "Keine geplanten Termine – lege unter „Aufgaben“ eine Sicherung an.",
+  "today": "Heute",
+  "free": "nichts geplant",
+  "more": "+{n} weitere",
+  "lastTitle": "Letzte Ergebnisse",
+  "task": "Aufgabe",
+  "when": "Wann",
+  "result": "Ergebnis",
+  "ok": "erfolgreich",
+  "failed": "fehlgeschlagen",
+  "rate": "{n} % erfolgreich",
+  "noResults": "Noch keine Ergebnisse.",
+  "nextBackup": "Nächste Sicherung",
+  "noneShort": "keine geplant",
+  "allOk": "Letzte Sicherungen erfolgreich"
+}

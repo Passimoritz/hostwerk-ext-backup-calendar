@@ -1,0 +1,81 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Passimoritz/hostwerk-public/main/sdk/manifest.schema.json",
+  "id": "backup-calendar",
+  "color": "#22c55e",
+  "name": {
+    "de": "Backup-Kalender",
+    "en": "Backup calendar"
+  },
+  "description": {
+    "de": "Alle geplanten Sicherungen der nächsten Tage als Kalender – und ob die letzten geklappt haben. Fehlschläge stehen oben.",
+    "en": "All scheduled backups of the coming days as a calendar – and whether the last ones worked. Failures come first."
+  },
+  "permissions": [
+    "read:tasks"
+  ],
+  "page": {
+    "title": {
+      "de": "Backup-Kalender",
+      "en": "Backup calendar"
+    },
+    "icon": "calendar",
+    "file": "page/index.html"
+  },
+  "widget": {
+    "title": {
+      "de": "Sicherungen",
+      "en": "Backups"
+    },
+    "file": "widget/index.html",
+    "size": "third"
+  },
+  "settings": [
+    {
+      "key": "onlyBackups",
+      "type": "switch",
+      "label": {
+        "de": "Nur Sicherungen zeigen",
+        "en": "Show backups only"
+      },
+      "default": true
+    },
+    {
+      "key": "days",
+      "type": "select",
+      "label": {
+        "de": "Zeitraum",
+        "en": "Range"
+      },
+      "default": "14",
+      "options": [
+        {
+          "value": "7",
+          "label": {
+            "de": "7 Tage",
+            "en": "7 days"
+          }
+        },
+        {
+          "value": "14",
+          "label": {
+            "de": "14 Tage",
+            "en": "14 days"
+          }
+        },
+        {
+          "value": "28",
+          "label": {
+            "de": "4 Wochen",
+            "en": "4 weeks"
+          }
+        }
+      ]
+    }
+  ],
+  "version": "1.0.0",
+  "author": "Hostwerk",
+  "homepage": "https://github.com/Passimoritz/hostwerk-ext-backup-calendar",
+  "license": "MIT",
+  "icon": "icon.svg",
+  "hostwerk": ">=2.9.0"
+}

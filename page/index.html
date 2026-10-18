@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/ext-sdk.js"></script>
+  <style>
+    .cal { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 14px 0 22px; }
+    .day { padding: 10px 12px; min-height: 92px; }
+    .day.today { border-color: var(--hw-accent); }
+    .day.empty { opacity: .7; }
+    .day-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .run { display: flex; gap: 6px; font-size: 12.5px; padding: 2px 0; }
+    .run.backup .hw-mono { color: var(--hw-ok); }
+  </style>
+</head>
+<body>
+  <h1 data-i18n="title"></h1>
+  <p class="hw-sub" id="sub" data-i18n="loading"></p>
+  <div class="cal" id="cal"><div class="hw-skeleton" style="height:92px"></div></div>
+  <h2 class="hw-h2" data-i18n="lastTitle"></h2>
+  <div id="results"></div>
+  <script src="lib.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
