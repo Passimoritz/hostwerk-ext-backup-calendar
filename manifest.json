@@ -19,7 +19,11 @@
       "en": "Backup calendar"
     },
     "icon": "calendar",
-    "file": "page/index.html"
+    "file": "page/index.html",
+    "description": {
+      "de": "Alle geplanten Sicherungen der nächsten Tage als Kalender – und ob die letzten geklappt haben. Fehlschläge stehen oben.",
+      "en": "All scheduled backups of the coming days as a calendar – and whether the last ones worked. Failures come first."
+    }
   },
   "widget": {
     "title": {
@@ -72,7 +76,7 @@
       ]
     }
   ],
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Hostwerk",
   "homepage": "https://github.com/Passimoritz/hostwerk-ext-backup-calendar",
   "license": "MIT",
