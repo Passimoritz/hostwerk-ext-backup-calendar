@@ -1,3 +1,5 @@
+![Backup-Kalender](banner.svg)
+
 # Backup-Kalender
 
 Alle geplanten Sicherungen der nächsten Tage als Kalender – und ob die letzten geklappt haben. Fehlschläge stehen oben.

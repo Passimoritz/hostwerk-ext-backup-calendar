@@ -1,3 +1,5 @@
+![Backup calendar](banner.svg)
+
 # Backup calendar
 
 All scheduled backups of the coming days as a calendar – and whether the last ones worked. Failures come first.
