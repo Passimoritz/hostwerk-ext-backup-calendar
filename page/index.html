@@ -8,7 +8,7 @@
     .cal { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 14px 0 22px; }
     .day { padding: 10px 12px; min-height: 92px; }
     .day.today { border-color: var(--accent); }
-    .day.empty { opacity: .7; }
+    .day.empty { border-style: dashed; } /* ohne Durchsichtigkeit – Text bleibt kontrastreich */
     .day-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .run { display: flex; gap: 6px; font-size: 12.5px; padding: 2px 0; }
     .run.backup .mono { color: var(--ok); }

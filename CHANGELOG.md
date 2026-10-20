@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Empty days marked with a dashed border instead of transparency – text keeps its contrast. / Leere Tage mit gestricheltem Rand statt Durchsichtigkeit – der Text bleibt kontrastreich.
+
 ## 1.2.0
 
 - New animated icon and a banner for Hostwerk's new extension page, category “monitoring”. / Neues bewegtes Symbol und ein Banner für die neue Erweiterungsseite, Kategorie „monitoring“.
