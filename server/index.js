@@ -35,8 +35,10 @@ function createService(host) {
     const hist = {};
     for (const t of list) hist[t.id] = safe(() => ctx.scheduler.history(t.id)).filter((h) => h && h.at >= since);
     const out = L.taskEvents(list, hist, marks);
-    // External backup (Live → Backups → external)
-    for (const h of safe(() => (ctx.monitor && ctx.monitor.offsite && ctx.monitor.offsite.history) || [])) if (h.t >= since) out.push({ t: h.t, name: host.t('External backup'), ok: !!h.ok, error: h.error || null, kind: 'offsite' });
+    // External backup (Live → Backups → external) – going to the cloud, the cloud backup reports the same runs itself
+    const o = (ctx.monitor && ctx.monitor.offsite) || {};
+    const viaCloud = o.type === 'cloud' && ctx.cloudBackup && ctx.cloudBackup.history;
+    if (!viaCloud) for (const h of safe(() => o.history || [])) if (h.t >= since) out.push({ t: h.t, name: host.t('External backup'), ok: !!h.ok, error: h.error || null, kind: 'offsite' });
     // Cloud backup (extension "Cloud backup", service cloudBackup)
     for (const h of safe(() => (ctx.cloudBackup && ctx.cloudBackup.history ? ctx.cloudBackup.history() : []))) if (h.t >= since) out.push({ t: h.t, name: h.name || host.t('Cloud backup'), ok: h.ok !== false, error: h.error || null, kind: 'cloud' });
     // Game server backups (extension "Game servers", service games)
