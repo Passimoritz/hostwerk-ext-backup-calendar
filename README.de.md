@@ -1,34 +1,34 @@
-![Backup-Kalender](banner.svg)
+![Sicherungs-Kalender](banner.svg)
 
-# Backup-Kalender
+# Sicherungs-Kalender
 
-Alle geplanten Sicherungen der nächsten Tage als Kalender – und ob die letzten geklappt haben. Fehlschläge stehen oben.
+Alle geplanten Sicherungen als Kalender – und was davor passiert ist. Fehlschläge stehen oben.
 
-Eine offizielle Erweiterung für [Hostwerk](https://github.com/Passimoritz/hostwerk-public).
+[English](README.md) · Offizielle [Hostwerk](https://github.com/Passimoritz/hostwerk-public)-Erweiterung (native Erweiterung, ab Hostwerk 2.11)
 
-## Funktionen
+## Was sie kann
 
-- Kalender der nächsten 7, 14 oder 28 Tage mit allen geplanten Sicherungen
-- Letzte Ergebnisse – Fehlschläge zuerst, mit Erfolgsquote
-- Kachel für die Übersicht: nächste Sicherung und letzte Fehlschläge
+- Tage- oder Monatsansicht mit jeder geplanten Sicherung (täglich, alle paar Minuten, Cron, nach einer anderen Aufgabe; „beim Start“ steht darunter)
+- Was passiert ist: Aufgabenläufe, externe Sicherung, Cloud-Sicherung (Erweiterung „Cloud-Sicherung“), Sicherungen der Spiele-Server (Erweiterung „Spiele-Server“), Wiederherstellungs-Proben
+- Fehlschläge mit „Protokoll öffnen“ und „Erneut ausführen“, „Jetzt sichern“ für jede Sicherungs-Aufgabe
+- Schalter „zählt als Sicherung“ je Aufgabe – für Aufgaben, die Hostwerk nicht an Art oder Namen erkennt
+- Export als `.ics` und ein geheimer Abo-Link für Kalender-Apps
+- Kachel für die Übersicht und ein Reiter im Sicherungsbereich von Hostwerk
 
-## Installieren
+## Daten
 
-In Hostwerk: **Apps → Erweiterungen → Marktplatz** → „Backup-Kalender“ → Installieren. Updates kommen von selbst.
+`data/backup-calendar.json` – deine Markierungen und der Abo-Link. Der Kalender selbst kommt aus Hostwerks Aufgaben und Sicherungen.
 
-## Rechte
-
-- Aufgaben lesen
-
-Seiten laufen abgeschottet (eigener Ursprung, keine fremden Skripte); alles, was etwas ändert, fragt vorher nach.
-
-## Entwicklung
+## Entwickeln
 
 ```bash
-node --test tests/*.test.js            # Tests der Logik
-node pfad/zu/hostwerk-public/sdk/check.js . --strict   # dieselbe Prüfung wie der Katalog
+node --test tests/*.test.js          # Tests
+node build-native.js .               # Oberfläche bauen (sdk/build-native.js aus hostwerk-public)
+node check.js . --strict             # Prüfung wie im Katalog (sdk/check.js)
 ```
 
-Die Logik steckt in `page/lib.js` (ohne DOM, getestet), die Seite in `page/app.js`. Ein Tag `vX.Y.Z` passend zu `manifest.json` veröffentlicht ein Release; der Hostwerk-Katalog übernimmt es.
+Logik ohne Seite in `lib/calendar.js`, Server-Teil in `server/`, Quelltext der Oberfläche in `ui/src`. Texte im Code sind Englisch, Deutsch steht in `locales/de.json`.
 
-English: [README.md](README.md) · Lizenz: MIT
+## Lizenz
+
+MIT

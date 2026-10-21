@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const L = require('../page/lib.js');
+const L = require('../lib/calendar.js');
 
 const at = (y, mo, d, h = 0, mi = 0) => new Date(y, mo - 1, d, h, mi).getTime();
 const NOW = at(2026, 10, 18, 12, 0); // Sonntag

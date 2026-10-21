@@ -1,39 +1,43 @@
 {
   "$schema": "https://raw.githubusercontent.com/Passimoritz/hostwerk-public/main/sdk/manifest.schema.json",
   "id": "backup-calendar",
-  "color": "#22c55e",
-  "category": "monitoring",
   "name": {
-    "de": "Backup-Kalender",
+    "de": "Sicherungs-Kalender",
     "en": "Backup calendar"
   },
   "description": {
-    "de": "Alle geplanten Sicherungen der nächsten Tage als Kalender – und ob die letzten geklappt haben. Fehlschläge stehen oben.",
-    "en": "All scheduled backups of the coming days as a calendar – and whether the last ones worked. Failures come first."
+    "de": "Alle geplanten Sicherungen als Kalender (Tage oder Monat) – und was davor passiert ist: Aufgaben, externe und Cloud-Sicherung, Spiele-Server, Wiederherstellungs-Proben. Fehlschläge mit Protokoll und „Erneut ausführen“, „Jetzt sichern“, Export und Abo (.ics).",
+    "en": "All planned backups as a calendar (days or month) – and what happened before: tasks, external and cloud backup, game servers, restore probes. Failures with log and “Run again”, “Back up now”, export and subscription (.ics)."
   },
+  "version": "2.0.0",
+  "author": "Hostwerk",
+  "homepage": "https://github.com/Passimoritz/hostwerk-ext-backup-calendar",
+  "license": "MIT",
+  "icon": "icon.svg",
+  "banner": "banner.svg",
+  "color": "#22c55e",
+  "category": "monitoring",
+  "hostwerk": ">=2.11.0",
   "permissions": [
-    "read:tasks"
+    "native"
   ],
   "page": {
     "title": {
-      "de": "Backup-Kalender",
+      "de": "Sicherungs-Kalender",
       "en": "Backup calendar"
     },
-    "icon": "calendar",
-    "file": "page/index.html",
     "description": {
-      "de": "Alle geplanten Sicherungen der nächsten Tage als Kalender – und ob die letzten geklappt haben. Fehlschläge stehen oben.",
-      "en": "All scheduled backups of the coming days as a calendar – and whether the last ones worked. Failures come first."
+      "de": "Geplante Sicherungen und ihre Ergebnisse als Kalender.",
+      "en": "Planned backups and their results as a calendar."
+    },
+    "icon": "calendar",
+    "nav": {
+      "group": "system"
     }
   },
-  "widget": {
-    "title": {
-      "de": "Sicherungen",
-      "en": "Backups"
-    },
-    "file": "widget/index.html",
-    "size": "third"
-  },
+  "backend": "server/index.js",
+  "ui": "ui/index.js",
+  "settingsTab": "extensions",
   "settings": [
     {
       "key": "onlyBackups",
@@ -77,11 +81,36 @@
       ]
     }
   ],
-  "version": "1.2.1",
-  "author": "Hostwerk",
-  "homepage": "https://github.com/Passimoritz/hostwerk-ext-backup-calendar",
-  "license": "MIT",
-  "icon": "icon.svg",
-  "banner": "banner.svg",
-  "hostwerk": ">=2.9.0"
+  "synergies": [
+    {
+      "with": "quick-tasks",
+      "title": {
+        "de": "Sicherungen per Schnell-Aufgabe von überall starten",
+        "en": "Start backups from anywhere with quick tasks"
+      }
+    },
+    {
+      "with": "cloud-backup",
+      "title": {
+        "de": "Läufe der Cloud-Sicherung erscheinen im Kalender",
+        "en": "Cloud backup runs appear in the calendar"
+      }
+    },
+    {
+      "with": "game-servers",
+      "title": {
+        "de": "Sicherungen der Spiele-Server erscheinen im Kalender",
+        "en": "Game server backups appear in the calendar"
+      }
+    }
+  ],
+  "uses": [
+    "cloudBackup",
+    "games"
+  ],
+  "allowExtensions": {
+    "*": [
+      "tabs"
+    ]
+  }
 }
