@@ -2,17 +2,20 @@
 
 # Sicherungs-Kalender
 
-Alle geplanten Sicherungen als Kalender – und was davor passiert ist. Fehlschläge stehen oben.
+Wie gut sind deine Daten gesichert – und was läuft als Nächstes? Offene Fehlschläge zuerst, dann eine Ampel je Bereich, dann der Zeitplan.
 
 [English](README.md) · Offizielle [Hostwerk](https://github.com/Passimoritz/hostwerk-public)-Erweiterung (native Erweiterung, ab Hostwerk 2.11)
 
 ## Was sie kann
 
-- Tage- oder Monatsansicht mit jeder geplanten Sicherung (täglich, alle paar Minuten, Cron, nach einer anderen Aufgabe; „beim Start“ steht darunter)
-- Was passiert ist: Aufgabenläufe, externe Sicherung, Cloud-Sicherung (Erweiterung „Cloud-Sicherung“), Sicherungen der Spiele-Server (Erweiterung „Spiele-Server“), Wiederherstellungs-Proben
-- Fehlschläge mit „Protokoll öffnen“ und „Erneut ausführen“, „Jetzt sichern“ für jede Sicherungs-Aufgabe
+- Status-Kopf: letzte erfolgreiche Sicherung, nächste Sicherung und eine Ampel je Bereich (Datenbanken, Minecraft, Projekte, extern, Wiederherstellungs-Proben, Erweiterungen) – gesichert, veraltet, nie gesichert oder fehlgeschlagen; ein Bereich klappt auf mit „Jetzt sichern“ je Datenbank oder Server
+- Offene Fehlschläge ganz oben mit „Protokoll“, „Erneut ausführen“ oder „Öffnen“ – ein Fehlschlag verschwindet, sobald dasselbe wieder geklappt hat
+- Zeitplan als kurzer Ablauf (leere Tage in einer Zeile zusammengefasst) oder als Monatskalender mit Markierung je Bereich; Farbe und Form je Bereich mit Legende
+- Alles, was geplant ist: Aufgaben (täglich, alle paar Minuten, Cron, nach einer anderen Aufgabe; „beim Start“ steht darunter) und Hostwerks eigene Zeitpläne – nächtliche Sicherungen der Datenbanken und Minecraft-Server, externe Sicherung und Wiederherstellungs-Proben
+- Was passiert ist: Aufgabenläufe, nächtliche und von Hand gestartete Sicherungen, Projekt-Schnappschüsse, externe Sicherung, Cloud-Sicherung (Erweiterung „Cloud-Sicherung“), Quellen anderer Erweiterungen wie die Spiele-Server, Wiederherstellungs-Proben
+- Schnellstart ohne jede Sicherung: „Alle Datenbanken jede Nacht sichern“, „Minecraft-Welten täglich sichern“, „Eine Kopie außerhalb dieses PCs“ – legt ganz normale Aufgaben an
 - Schalter „zählt als Sicherung“ je Aufgabe – für Aufgaben, die Hostwerk nicht an Art oder Namen erkennt
-- Export als `.ics` und ein geheimer Abo-Link für Kalender-Apps
+- Menü „Teilen“: Export als `.ics` und ein geheimer Abo-Link für Kalender-Apps
 - Kachel für die Übersicht und ein Reiter im Sicherungsbereich von Hostwerk
 
 ## Daten
