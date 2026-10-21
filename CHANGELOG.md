@@ -1,3 +1,7 @@
+## 2.1.1
+
+- Lives where it belongs: Backups → Calendar – no own sidebar entry any more (Hostwerk 3.0+); the full page stays under Extensions → Open and can be pinned in the sidebar settings. / Steckt jetzt dort, wo sie hingehört: Sicherungen → Kalender – kein eigener Seitenleisten-Eintrag mehr (Hostwerk 3.0+); die ganze Seite bleibt unter Erweiterungen → Öffnen und lässt sich in den Seitenleisten-Einstellungen anheften.
+
 ## 2.1.0
 
 - Fixed: “No runs planned – create a backup under Tasks” appeared although backups were planned or had just run. The calendar now also plans Hostwerk’s own schedules (nightly backups of databases and Minecraft servers, external backup, restore probes), restore probes count as checks, not as backups, and the quick start only shows when nothing is set up at all. / Behoben: „Keine Termine geplant – lege unter ‚Aufgaben‘ eine Sicherung an“ stand da, obwohl Sicherungen geplant waren oder gerade gelaufen sind. Der Kalender plant jetzt auch Hostwerks eigene Zeitpläne (nächtliche Sicherungen der Datenbanken und Minecraft-Server, externe Sicherung, Wiederherstellungs-Proben), Proben zählen als Prüfung statt als Sicherung, und der Schnellstart erscheint nur, wenn wirklich nichts eingerichtet ist.

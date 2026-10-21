@@ -8,6 +8,7 @@ Wie gut sind deine Daten gesichert – und was läuft als Nächstes? Offene Fehl
 
 ## Was sie kann
 
+- **Wo:** Sicherungen → Kalender – seit 2.1.1 ohne eigenen Seitenleisten-Eintrag; die ganze Seite bleibt unter Erweiterungen → Öffnen
 - Status-Kopf: letzte erfolgreiche Sicherung, nächste Sicherung und eine Ampel je Bereich (Datenbanken, Minecraft, Projekte, extern, Wiederherstellungs-Proben, Erweiterungen) – gesichert, veraltet, nie gesichert oder fehlgeschlagen; ein Bereich klappt auf mit „Jetzt sichern“ je Datenbank oder Server
 - Offene Fehlschläge ganz oben mit „Protokoll“, „Erneut ausführen“ oder „Öffnen“ – ein Fehlschlag verschwindet, sobald dasselbe wieder geklappt hat
 - Zeitplan als kurzer Ablauf (leere Tage in einer Zeile zusammengefasst) oder als Monatskalender mit Markierung je Bereich; Farbe und Form je Bereich mit Legende
