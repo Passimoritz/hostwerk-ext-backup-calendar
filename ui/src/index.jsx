@@ -475,8 +475,8 @@ function BackupCalendarPage() {
     <div className="page fade-in">
       <div className="page-head">
         <div>
-          <h1><Calendar /> Backup calendar</h1>
-          <InfoTip title="Backup calendar">All scheduled backups – tasks, nightly backups, external backup and restore probes – and whether the last ones worked. Failures come first.</InfoTip>
+          <h1><Calendar /> Backup calendar <InfoTip pop title="Backup calendar">All scheduled backups – tasks, nightly backups, external backup and restore probes – and whether the last ones worked. Failures come first.</InfoTip></h1>
+          <p>Every planned backup in one calendar – and whether the last ones worked.</p>
         </div>
       </div>
       <Calendar2 />

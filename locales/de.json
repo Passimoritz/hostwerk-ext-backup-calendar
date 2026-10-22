@@ -148,5 +148,6 @@
   "{n} server, from 03:00": "{n} Server, ab 03:00 Uhr",
   "{n} servers, from 03:00": "{n} Server, ab 03:00 Uhr",
   "{n} never backed up": "{n} nie gesichert",
-  "{n} outdated": "{n} veraltet"
+  "{n} outdated": "{n} veraltet",
+  "Every planned backup in one calendar – and whether the last ones worked.": "Jede geplante Sicherung in einem Kalender – und ob die letzten geklappt haben."
 }

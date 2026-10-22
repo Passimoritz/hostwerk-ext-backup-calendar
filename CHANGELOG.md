@@ -1,3 +1,8 @@
+## 2.1.2
+
+- Page head like every Hostwerk page: one sentence under the title, the longer explanation behind ⓘ. / Seitenkopf wie jede Hostwerk-Seite: ein Satz unter dem Titel, die längere Erklärung hinter ⓘ.
+- Area marks use the design scale instead of a fixed pixel rounding. / Bereichs-Markierungen nutzen die Design-Skala statt einer festen Pixel-Rundung.
+
 ## 2.1.1
 
 - Lives where it belongs: Backups → Calendar – no own sidebar entry any more (Hostwerk 3.0+); the full page stays under Extensions → Open and can be pinned in the sidebar settings. / Steckt jetzt dort, wo sie hingehört: Sicherungen → Kalender – kein eigener Seitenleisten-Eintrag mehr (Hostwerk 3.0+); die ganze Seite bleibt unter Erweiterungen → Öffnen und lässt sich in den Seitenleisten-Einstellungen anheften.

@@ -9,7 +9,7 @@
 .bc-mark { display: inline-block; flex: none; width: 10px; height: 10px; background: var(--bc-c, var(--muted)); }
 .bc-mark.area-db { --bc-c: var(--info); border-radius: 50%; }
 .bc-mark.area-mc { --bc-c: color-mix(in srgb, var(--ok) 70%, var(--info)); border-radius: var(--r-xs, 2px); }
-.bc-mark.area-project { --bc-c: var(--accent); transform: rotate(45deg) scale(.85); border-radius: 1px; }
+.bc-mark.area-project { --bc-c: var(--accent); transform: rotate(45deg) scale(.85); border-radius: 0; }
 .bc-mark.area-offsite { --bc-c: color-mix(in srgb, var(--warn) 75%, var(--accent)); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
 .bc-mark.area-probe { background: transparent; border: 2px solid var(--text-2); border-radius: 50%; }
 .bc-mark.area-ext { --bc-c: color-mix(in srgb, var(--accent) 50%, var(--info)); clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
