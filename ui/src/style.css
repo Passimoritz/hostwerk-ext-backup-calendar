@@ -1,5 +1,5 @@
 /* Backup calendar – Hostwerk tokens only (light and dark), design scale var(--sp-*), var(--fs-*), var(--r-*). */
-.bc { display: grid; gap: var(--sp-4); }
+.bc { display: grid; gap: var(--sp-3); }
 .bc > * { margin: 0; }
 .bc-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .bc-wrap { min-width: 0; overflow-wrap: anywhere; }
@@ -42,13 +42,15 @@
 .bc-fails .card-head h3 { color: var(--err-text); }
 .bc-fails .bc-rows { padding: var(--sp-2) var(--sp-3) var(--sp-3); }
 
-/* Status head: two facts and one light per area */
-.bc-status { padding: var(--sp-4); display: grid; gap: var(--sp-4); }
-.bc-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--sp-4); }
-.bc-fact { display: grid; gap: 2px; align-content: start; justify-items: start; }
-.bc-big { font-size: var(--fs-xl); font-weight: 700; line-height: 1.2; }
+/* Status head as one bar: two facts and one light per area side by side (details of an area below, full width) */
+.bc-status { padding: var(--sp-3); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--sp-3); }
+.bc-facts { display: flex; flex-wrap: wrap; gap: var(--sp-4); flex: 1 1 340px; min-width: 0; }
+.bc-fact { display: grid; gap: 2px; align-content: start; justify-items: start; flex: 1 1 150px; min-width: 0; }
+.bc-big { font-size: var(--fs-lg); font-weight: 700; line-height: 1.2; }
+.bc-area-detail { flex: 1 1 100%; min-width: 0; }
+.bc-area-detail:empty { display: none; }
 .bc-fact-btn { margin-top: var(--sp-1); }
-.bc-lights { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: var(--sp-2); }
+.bc-lights { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--sp-2); flex: 2 1 420px; min-width: 0; }
 .bc-light { display: flex; align-items: flex-start; gap: var(--sp-2); text-align: left; padding: var(--sp-2) var(--sp-3); min-height: 44px; border: 1px solid var(--line); border-left-width: 4px; border-radius: var(--r-md); background: var(--surface); color: inherit; font: inherit; cursor: pointer; }
 .bc-light > .bc-mark { margin-top: 5px; }
 .bc-light:hover { background: var(--surface-2); }
@@ -67,7 +69,9 @@
 .bc-tpl .btn { margin-top: var(--sp-2); }
 .bc-hint { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border: 1px dashed var(--line-2); border-radius: var(--r-md); color: var(--text-2); }
 
-/* Schedule card: agenda or month */
+/* Schedule card: agenda or month – fills the remaining height (useFill), the body scrolls on its own */
+.bc-plan { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.bc-plan-body { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .bc-plan-head { flex-wrap: wrap; gap: var(--sp-2); }
 .bc-agenda { display: grid; gap: var(--sp-3); }
 .bc-agday { display: grid; gap: var(--sp-1); }
@@ -93,9 +97,7 @@
 .bc-cell-err { width: 12px; height: 12px; color: var(--err-text); }
 .bc-startup { margin-top: var(--sp-3); }
 
-/* Less important: marks and task results folded away */
-.bc-more > summary { display: flex; align-items: center; gap: var(--sp-2); min-height: 44px; padding: var(--sp-2) var(--sp-4); cursor: pointer; font-weight: 600; list-style-position: inside; }
-.bc-more > summary::marker { color: var(--muted); }
+/* Less important: marks and task results in dialogs */
 .bc-p { margin: 0 0 var(--sp-3); }
 .bc-marklist { gap: var(--sp-2); }
 .bc-actions { white-space: nowrap; text-align: right; }

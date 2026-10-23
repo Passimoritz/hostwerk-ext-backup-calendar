@@ -1,3 +1,7 @@
+## 2.2.0
+
+- Status as one compact bar (last and next backup next to the lights per area), the schedule fills the rest of the window and scrolls inside – the page stays put; “Which tasks count …” and “Last results …” open from the schedule head (side sheet in newer Hostwerk, dialog before) / Status als eine schmale Leiste (letzte und nächste Sicherung neben den Ampeln je Bereich), der Plan füllt den Rest des Fensters und scrollt in sich – die Seite bleibt stehen; „Was zählt als Sicherung …“ und „Letzte Ergebnisse …“ öffnen aus dem Kopf des Plans (in neueren Hostwerk-Versionen als Seitenblatt, sonst als Dialog)
+
 ## 2.1.2
 
 - Page head like every Hostwerk page: one sentence under the title, the longer explanation behind ⓘ. / Seitenkopf wie jede Hostwerk-Seite: ein Satz unter dem Titel, die längere Erklärung hinter ⓘ.

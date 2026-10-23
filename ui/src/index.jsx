@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, CircleDashed, Clock, CloudOff, Database, ExternalLink, FileText, ListChecks, MinusCircle, Play, RotateCw, Share2, ShieldCheck, Sparkles, XCircle } from 'lucide-react';
 import { post, put, useApi, on } from '@hostwerk/api';
-import { Btn, Empty, Loading, TileEmpty, InfoTip, Seg, Switch, Callout, toast, confirmDialog } from '@hostwerk/ui';
+import { Btn, Empty, Loading, Modal, TileEmpty, InfoTip, Seg, Switch, Callout, toast, confirmDialog } from '@hostwerk/ui';
+import * as HUI from '@hostwerk/ui';
 import { contextMenu } from '@hostwerk/kit';
 import { t, pl } from '@hostwerk/i18n';
 import L from '../../lib/calendar.js';
+import { useFill } from './fill';
 import './style.css';
+
+// Seitenblatt aus Hostwerk (neuere Versionen) – die Seite bleibt daneben sichtbar; ältere Versionen zeigen denselben Inhalt als Dialog
+const Sheet = HUI.SideSheet || Modal;
 
 /*
  * Backup calendar: first what matters – failures that are still open, then the status head (last successful backup,
@@ -314,7 +319,7 @@ function StatusHead({ sum, status, targets, byId, reload, onSetup }) {
           })}
         </div>
       )}
-      <div id="bc-area-detail">{cur && <AreaDetail a={cur} targets={targets} byId={byId} reload={reload} />}</div>
+      <div id="bc-area-detail" className="bc-area-detail">{cur && <AreaDetail a={cur} targets={targets} byId={byId} reload={reload} />}</div>
     </section>
   );
 }
@@ -387,6 +392,9 @@ function Calendar2({ embedded }) {
   const today = L.dayKey(Date.now());
   const [selected, setSelected] = useState(today);
   const [showSetup, setShowSetup] = useState(false);
+  const [dialog, setDialog] = useState(null);
+  // Der Plan füllt die restliche Höhe und scrollt in seiner Fläche – Status oben bleibt stehen
+  const fill = useFill({ min: 200 });
   const d = st.data;
   const x = useMemo(() => (d ? derive(d, month) : null), [d, month]);
   if (!d && st.error) return <Empty icon={CloudOff} title="Could not load the backup calendar" text={st.error} action={<Btn icon={RotateCw} onClick={() => st.reload()}>Try again</Btn>} />;
@@ -429,15 +437,17 @@ function Calendar2({ embedded }) {
           <button type="button" className="btn xs" onClick={() => setShowSetup(true)}>Show templates</button>
         </div>
       )}
-      <section className="card bc-plan" aria-labelledby="bc-plan-h">
+      <section className="card bc-plan" aria-labelledby="bc-plan-h" ref={fill}>
         <div className="card-head bc-plan-head">
           <CalendarDays size={16} />
           <h3 id="bc-plan-h" className="grow">{view === 'agenda' ? t('Next {n} days', { n: d.settings.days }) : t('Month')}</h3>
           <Seg value={view} onChange={setView} options={[{ id: 'agenda', label: 'Agenda' }, { id: 'month', label: 'Month' }]} />
+          <Btn className="sm ghost" icon={ListChecks} onClick={() => setDialog('marks')}>Which tasks count …</Btn>
+          {x.results.length > 0 && <Btn className="sm ghost" icon={FileText} onClick={() => setDialog('results')}>Last results …</Btn>}
           <Btn className="sm ghost" icon={Share2} aria-haspopup="menu" onClick={share}>Share</Btn>
           <InfoTip pop title="Share the calendar">Export saves the next weeks as a .ics file. The subscription link keeps Outlook, Google, Apple or Thunderbird up to date (“subscribe to calendar” / “add from URL”). It works on this PC – from outside only through Hostwerk’s remote access. Anyone with the link sees the names of your backup tasks.</InfoTip>
         </div>
-        <div className="card-body">
+        <div className="card-body bc-plan-body">
           {view === 'agenda'
             ? <Agenda days={x.range} today={today} byId={x.byId} reload={st.reload} />
             : <>
@@ -453,18 +463,17 @@ function Calendar2({ embedded }) {
           {x.startup.length > 0 && <div className="small muted bc-startup">{t('At every start of Hostwerk: {names}', { names: x.startup.map((y) => y.name).join(', ') })}</div>}
         </div>
       </section>
-      <details className="card bc-more">
-        <summary><ListChecks size={16} aria-hidden="true" /><span>Which tasks count as backups</span></summary>
-        <div className="card-body">
+      {/* Seltenes im Dialog statt unter dem Plan: welche Aufgaben als Sicherung zählen, letzte Ergebnisse */}
+      {dialog === 'marks' && (
+        <Sheet title="Which tasks count as backups" onClose={() => setDialog(null)} footer={<Btn onClick={() => setDialog(null)}>Close</Btn>}>
           <p className="small muted bc-p">Hostwerk recognises backups by the kind of task (database, Minecraft, snapshot …) and by the name. Set it here by hand for tasks with other names.</p>
           <Marks tasks={d.tasks} marks={d.marks} setData={st.setData} />
-        </div>
-      </details>
-      {x.results.length > 0 && (
-        <details className="card bc-more">
-          <summary><FileText size={16} aria-hidden="true" /><span>Last task results</span></summary>
-          <div className="card-body"><Results list={x.results} byId={x.byId} reload={st.reload} /></div>
-        </details>
+        </Sheet>
+      )}
+      {dialog === 'results' && (
+        <Sheet size="wide" title="Last task results" onClose={() => setDialog(null)} footer={<Btn onClick={() => setDialog(null)}>Close</Btn>}>
+          <div className="table-wrap"><Results list={x.results} byId={x.byId} reload={st.reload} /></div>
+        </Sheet>
       )}
     </div>
   );

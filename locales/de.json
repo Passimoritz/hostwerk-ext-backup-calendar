@@ -149,5 +149,8 @@
   "{n} servers, from 03:00": "{n} Server, ab 03:00 Uhr",
   "{n} never backed up": "{n} nie gesichert",
   "{n} outdated": "{n} veraltet",
-  "Every planned backup in one calendar – and whether the last ones worked.": "Jede geplante Sicherung in einem Kalender – und ob die letzten geklappt haben."
+  "Every planned backup in one calendar – and whether the last ones worked.": "Jede geplante Sicherung in einem Kalender – und ob die letzten geklappt haben.",
+  "Which tasks count …": "Was zählt als Sicherung …",
+  "Last results …": "Letzte Ergebnisse …",
+  "Close": "Schließen"
 }
