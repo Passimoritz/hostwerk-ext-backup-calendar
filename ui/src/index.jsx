@@ -447,7 +447,7 @@ function Calendar2({ embedded }) {
           <Btn className="sm ghost" icon={Share2} aria-haspopup="menu" onClick={share}>Share</Btn>
           <InfoTip pop title="Share the calendar">Export saves the next weeks as a .ics file. The subscription link keeps Outlook, Google, Apple or Thunderbird up to date (“subscribe to calendar” / “add from URL”). It works on this PC – from outside only through Hostwerk’s remote access. Anyone with the link sees the names of your backup tasks.</InfoTip>
         </div>
-        <div className="card-body bc-plan-body">
+        <div className="card-body bc-plan-body" tabIndex={0} role="region" aria-labelledby="bc-plan-h">
           {view === 'agenda'
             ? <Agenda days={x.range} today={today} byId={x.byId} reload={st.reload} />
             : <>

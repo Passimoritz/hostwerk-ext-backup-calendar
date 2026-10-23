@@ -72,6 +72,7 @@
 /* Schedule card: agenda or month – fills the remaining height (useFill), the body scrolls on its own */
 .bc-plan { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
 .bc-plan-body { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.bc-plan-body:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: -2px; }
 .bc-plan-head { flex-wrap: wrap; gap: var(--sp-2); }
 .bc-agenda { display: grid; gap: var(--sp-3); }
 .bc-agday { display: grid; gap: var(--sp-1); }
