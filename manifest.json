@@ -9,7 +9,7 @@
     "de": "Wie gut sind deine Daten gesichert? Ampel je Bereich, letzte und nächste Sicherung, offene Fehlschläge mit „Erneut ausführen“ – dazu alle geplanten Sicherungen als Ablauf oder Monatskalender: Aufgaben, nächtliche Sicherungen, externe und Cloud-Sicherung, Spiele-Server, Wiederherstellungs-Proben. Schnellstart-Vorlagen, Export und Abo (.ics).",
     "en": "How well is your data backed up? One light per area, last and next backup, open failures with “Run again” – plus every planned backup as an agenda or month calendar: tasks, nightly backups, external and cloud backup, game servers, restore probes. Quick start templates, export and subscription (.ics)."
   },
-  "version": "2.2.1",
+  "version": "2.2.2",
   "author": "Hostwerk",
   "homepage": "https://github.com/Passimoritz/hostwerk-ext-backup-calendar",
   "license": "MIT",

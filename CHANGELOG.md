@@ -1,3 +1,7 @@
+## 2.2.2
+
+- New animated icon and banner in the common Hostwerk style (isometric block). / Neues animiertes Symbol und Banner im gemeinsamen Hostwerk-Stil (isometrischer Block).
+
 ## 2.2.1
 
 - The schedule area can be reached and scrolled with the keyboard, with a visible focus (WCAG) / Die Plan-Fläche lässt sich per Tastatur erreichen und scrollen, mit sichtbarem Fokus (WCAG)
