@@ -6,6 +6,8 @@ Wie gut sind deine Daten gesichert – und was läuft als Nächstes? Offene Fehl
 
 [English](README.md) · Offizielle [Hostwerk](https://github.com/Passimoritz/hostwerk-public)-Erweiterung (native Erweiterung, ab Hostwerk 2.11)
 
+![Bildschirmfoto](docs/screenshot.de.png)
+
 ## Was sie kann
 
 - **Wo:** Sicherungen → Kalender – seit 2.1.1 ohne eigenen Seitenleisten-Eintrag; die ganze Seite bleibt unter Erweiterungen → Öffnen
@@ -18,6 +20,12 @@ Wie gut sind deine Daten gesichert – und was läuft als Nächstes? Offene Fehl
 - Schalter „zählt als Sicherung“ je Aufgabe – für Aufgaben, die Hostwerk nicht an Art oder Namen erkennt
 - Menü „Teilen“: Export als `.ics` und ein geheimer Abo-Link für Kalender-Apps
 - Kachel für die Übersicht und ein Reiter im Sicherungsbereich von Hostwerk
+
+## Installieren
+
+In Hostwerk: **Erweiterungen → Entdecken** und „Installieren“ klicken.
+
+Native Erweiterungen laufen als Teil von Hostwerk (eigener Server- und Oberflächen-Teil). Deshalb installiert Hostwerk sie nur aus dem offiziellen Katalog (mit Prüfsumme) oder im Entwickler-Modus.
 
 ## Daten
 

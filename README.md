@@ -6,6 +6,8 @@ How well is your data backed up – and what runs next? Open failures first, the
 
 [Deutsch](README.de.md) · An official [Hostwerk](https://github.com/Passimoritz/hostwerk-public) extension (native extension, Hostwerk 2.11 or newer)
 
+![Screenshot](docs/screenshot.png)
+
 ## What it does
 
 - **Where:** Backups → Calendar – no own sidebar entry since 2.1.1; the full page stays under Extensions → Open
@@ -18,6 +20,12 @@ How well is your data backed up – and what runs next? Open failures first, the
 - Switch “counts as a backup” per task – for tasks Hostwerk does not recognise by kind or name
 - “Share” menu: export as `.ics` and a secret subscription link for calendar apps
 - Dashboard tile and a tab in Hostwerk’s backup area
+
+## Install
+
+In Hostwerk: **Extensions → Discover** and click “Install”.
+
+Native extensions run as part of Hostwerk (own server and interface part). That is why Hostwerk only installs them from the official catalogue (with checksum) or in developer mode.
 
 ## Data
 
