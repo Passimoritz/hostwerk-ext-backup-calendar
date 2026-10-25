@@ -2,6 +2,8 @@
 
 # Backup calendar
 
+> **Since 3.0 with cloud backup:** this also contains the former extension “Cloud backup” – under Backups → Cloud backup, as before. Anyone who had it gets this version automatically; connection, key and runs stay.
+
 How well is your data backed up – and what runs next? Open failures first, then one light per area, then the schedule.
 
 [Deutsch](README.de.md) · An official [Hostwerk](https://github.com/Passimoritz/hostwerk-public) extension (native extension, Hostwerk 2.11 or newer)

@@ -1,3 +1,9 @@
+# Changelog
+
+## 3.0.0
+
+- Now "Backup calendar & cloud": the former extension "Cloud backup" lives here (SDK 3.8 `replaces`). Both stay where they were – Backups → Calendar and Backups → Cloud backup –, same data (data/cloud-backup), same routes and the same service for the external backup; Hostwerk installs this version for everyone who had the cloud backup and removes it. / Jetzt „Sicherungs-Kalender & Cloud“: Die frühere Erweiterung „Cloud-Sicherung“ steckt hier (SDK 3.8 `replaces`). Beides bleibt, wo es war – Sicherungen → Kalender und Sicherungen → Cloud-Sicherung –, gleiche Daten (data/cloud-backup), gleiche Adressen und derselbe Dienst für die externe Sicherung; Hostwerk installiert diese Fassung für alle mit der Cloud-Sicherung und entfernt sie.
+
 ## 2.2.2
 
 - New animated icon and banner in the common Hostwerk style (isometric block). / Neues animiertes Symbol und Banner im gemeinsamen Hostwerk-Stil (isometrischer Block).

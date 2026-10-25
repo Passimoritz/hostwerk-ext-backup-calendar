@@ -2,14 +2,14 @@
   "$schema": "https://raw.githubusercontent.com/Passimoritz/hostwerk-public/main/sdk/manifest.schema.json",
   "id": "backup-calendar",
   "name": {
-    "de": "Sicherungs-Kalender",
-    "en": "Backup calendar"
+    "de": "Sicherungs-Kalender & Cloud",
+    "en": "Backup calendar & cloud"
   },
   "description": {
-    "de": "Wie gut sind deine Daten gesichert? Ampel je Bereich, letzte und nächste Sicherung, offene Fehlschläge mit „Erneut ausführen“ – dazu alle geplanten Sicherungen als Ablauf oder Monatskalender: Aufgaben, nächtliche Sicherungen, externe und Cloud-Sicherung, Spiele-Server, Wiederherstellungs-Proben. Schnellstart-Vorlagen, Export und Abo (.ics).",
-    "en": "How well is your data backed up? One light per area, last and next backup, open failures with “Run again” – plus every planned backup as an agenda or month calendar: tasks, nightly backups, external and cloud backup, game servers, restore probes. Quick start templates, export and subscription (.ics)."
+    "de": "Wie gut sind deine Daten gesichert? Ampel je Bereich, letzte und nächste Sicherung, offene Fehlschläge mit „Erneut ausführen“ – dazu alle geplanten Sicherungen als Ablauf oder Monatskalender, Export und Abo (.ics). Und Hostwerks externe Sicherung zusätzlich in die Cloud: OneDrive, Google Drive, S3 (AWS, Cloudflare R2, Backblaze …), Nextcloud/WebDAV oder SFTP – auf diesem PC verschlüsselt, mit Wiederherstellungs-Schlüssel und Wiederherstellungs-Probe.",
+    "en": "How well is your data backed up? A traffic light per area, last and next backup, open failures with “Run again” – plus every planned backup as a timeline or month calendar, export and subscription (.ics). And Hostwerk’s external backup into the cloud as well: OneDrive, Google Drive, S3 (AWS, Cloudflare R2, Backblaze …), Nextcloud/WebDAV or SFTP – encrypted on this PC, with recovery key and restore probe."
   },
-  "version": "2.2.2",
+  "version": "3.0.0",
   "author": "Hostwerk",
   "homepage": "https://github.com/Passimoritz/hostwerk-ext-backup-calendar",
   "license": "MIT",
@@ -17,7 +17,11 @@
   "banner": "banner.svg",
   "color": "#22c55e",
   "category": "monitoring",
-  "hostwerk": ">=2.11.0",
+  "hostwerk": ">=3.1.0",
+  "sdkVersion": "3.8",
+  "replaces": [
+    "cloud-backup"
+  ],
   "permissions": [
     "native"
   ],
@@ -81,17 +85,10 @@
   ],
   "synergies": [
     {
-      "with": "quick-tasks",
+      "with": "modes",
       "title": {
         "de": "Sicherungen per Schnell-Aufgabe von überall starten",
         "en": "Start backups from anywhere with quick tasks"
-      }
-    },
-    {
-      "with": "cloud-backup",
-      "title": {
-        "de": "Läufe der Cloud-Sicherung erscheinen im Kalender",
-        "en": "Cloud backup runs appear in the calendar"
       }
     },
     {
@@ -110,5 +107,8 @@
     "*": [
       "tabs"
     ]
-  }
+  },
+  "provides": [
+    "cloudBackup"
+  ]
 }

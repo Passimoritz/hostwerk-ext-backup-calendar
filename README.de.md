@@ -2,6 +2,8 @@
 
 # Sicherungs-Kalender
 
+> **Seit 3.0 mit Cloud-Sicherung:** Hier steckt auch die frühere Erweiterung „Cloud-Sicherung“ – unter Sicherungen → Cloud-Sicherung, wie bisher. Wer sie hatte, bekommt diese Fassung automatisch; Verbindung, Schlüssel und Läufe bleiben.
+
 Wie gut sind deine Daten gesichert – und was läuft als Nächstes? Offene Fehlschläge zuerst, dann eine Ampel je Bereich, dann der Zeitplan.
 
 [English](README.md) · Offizielle [Hostwerk](https://github.com/Passimoritz/hostwerk-public)-Erweiterung (native Erweiterung, ab Hostwerk 2.11)

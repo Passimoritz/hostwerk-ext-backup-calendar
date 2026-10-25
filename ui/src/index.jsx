@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, CircleDashed, Clock, CloudOff, Database, ExternalLink, FileText, ListChecks, MinusCircle, Play, RotateCw, Share2, ShieldCheck, Sparkles, XCircle } from 'lucide-react';
+import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, CircleDashed, Clock, CloudOff, CloudUpload, Database, ExternalLink, FileText, ListChecks, MinusCircle, Play, RotateCw, Share2, ShieldCheck, Sparkles, XCircle } from 'lucide-react';
 import { post, put, useApi, on } from '@hostwerk/api';
 import { Btn, Empty, Loading, Modal, TileEmpty, InfoTip, Seg, Switch, Callout, toast, confirmDialog } from '@hostwerk/ui';
 import * as HUI from '@hostwerk/ui';
@@ -7,6 +7,7 @@ import { contextMenu } from '@hostwerk/kit';
 import { t, pl } from '@hostwerk/i18n';
 import L from '../../lib/calendar.js';
 import { useFill } from './fill';
+import { CloudBackupPage } from './cloud';
 import './style.css';
 
 // Seitenblatt aus Hostwerk (neuere Versionen) – die Seite bleibt daneben sichtbar; ältere Versionen zeigen denselben Inhalt als Dialog
@@ -487,6 +488,7 @@ function BackupCalendarPage() {
           <h1><Calendar /> Backup calendar <InfoTip pop title="Backup calendar">All scheduled backups – tasks, nightly backups, external backup and restore probes – and whether the last ones worked. Failures come first.</InfoTip></h1>
           <p>Every planned backup in one calendar – and whether the last ones worked.</p>
         </div>
+        <div className="actions"><a className="btn sm ghost" href="#/sicherungen/x-backup-calendar-cloud">{t('Cloud backup')}</a></div>
       </div>
       <Calendar2 />
     </div>
@@ -521,6 +523,10 @@ export default {
   slots: {
     'dashboard.tiles': [{ id: 'next', title: 'Backups', icon: Calendar, size: 'third', Component: BackupTile }],
     // Tab in Hostwerk's backup area (#/sicherungen/x-backup-calendar-calendar)
-    'backups.tabs': [{ id: 'calendar', title: 'Calendar', icon: Calendar, Component: () => <Calendar2 embedded /> }],
+    'backups.tabs': [
+      { id: 'calendar', title: 'Calendar', icon: Calendar, Component: () => <Calendar2 embedded /> },
+      // 3.0: Teil „Cloud“ (bis 1.5 eigene Erweiterung „Cloud-Sicherung“, gleicher Platz unter Sicherungen)
+      { id: 'cloud', title: 'Cloud backup', icon: CloudUpload, Component: CloudBackupPage, order: 40 },
+    ],
   },
 };
