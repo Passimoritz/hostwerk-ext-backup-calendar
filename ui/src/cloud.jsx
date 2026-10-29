@@ -218,7 +218,7 @@ function CloudBackupPage() {
             <div className="stack cb-body">
               <div className="small row-tight"><ShieldCheck size={15} className="c-ok" />Hostwerk's external backup goes to the cloud.</div>
               {s.lastRun && <div className="small muted">{t('Last run: {when}', { when: when(s.lastRun) })}{s.lastError ? ` – ${s.lastError}` : ''}</div>}
-              <div><Btn className="sm ghost" icon={ArrowRight} onClick={() => { location.hash = '/live/backups'; }}>Schedule, retention and restore probe</Btn></div>
+              <div><Btn className="sm ghost" icon={ArrowRight} onClick={() => { location.hash = '/live/sicherung'; }}>Schedule, retention and restore probe</Btn></div>
             </div>
           ) : (
             <div className="row-tight cb-wrap">

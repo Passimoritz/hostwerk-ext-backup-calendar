@@ -33,6 +33,9 @@ const MAX_RUNS = 60;
 /** Form fields that are kept sealed and never shown again (the page gets •••••• back). */
 const SECRET_FIELDS = ['pass', 'secretKey', 'token', 'accessKey', 'clientSecret'];
 let state = null;
+// Hostwerk with SDK 3.11 keeps backup targets of extensions apart with a prefix ("backup-calendar:cloud"); a stored choice can be the
+// short id (older Hostwerk, only one extension with "cloud") or the full one (Hostwerk offered both) – both mean this target.
+const isCloud = (type) => type === 'cloud' || type === 'backup-calendar:cloud';
 
 /** Called by server/index.js (activate). */
 function mount(host) {
@@ -63,7 +66,7 @@ function mount(host) {
     return {
       installed: e ? e.version : null, kinds: Object.entries(KINDS).map(([id, k]) => ({ id, label: k.label, oauth: !!k.oauth, fields: k.fields || [] })), kind: c.kind || null, form,
       connected: rc.connected(), hasKey: !!c.key, keySeen: !!c.keySeen, keyFromElsewhere: !!c.keyFromElsewhere, lastTest: c.lastTest || null,
-      selected: o.type === 'cloud', offsiteEnabled: !!o.enabled, lastRun: o.type === 'cloud' ? o.lastRun || null : null, lastError: o.type === 'cloud' ? o.lastError || null : null,
+      selected: isCloud(o.type), offsiteEnabled: !!o.enabled, lastRun: isCloud(o.type) ? o.lastRun || null : null, lastError: isCloud(o.type) ? o.lastError || null : null,
       runs: (c.runs || []).slice(-10).reverse(), limits: c.limits || { limit: 0, from: '', to: '' }, migrated: !!c.env,
       signedIn: [...pending.keys()], desktop: host.core('platform').HAS_DESKTOP !== false,
     };
@@ -215,7 +218,7 @@ function mount(host) {
   host.router.get('/cloud-backup/list', async (req, res) => res.json((await rc.list()).map((name) => ({ name, t: backupTime(name) }))));
   host.router.delete('/cloud-backup', (req, res) => {
     const o = ctx.monitor ? ctx.monitor.offsite : null;
-    if (o && o.type === 'cloud') { o.type = 'folder'; o.enabled = false; ctx.settings.save(); }
+    if (o && isCloud(o.type)) { o.type = 'folder'; o.enabled = false; ctx.settings.save(); }
     try { fs.rmSync(rc.conf, { force: true }); } catch (e) { throw host.error(500, 'Could not remove the connection: {msg}', { msg: e.message }); }
     // key stays: older backups can still be read
     update((c) => { delete c.form; delete c.kind; delete c.env; });

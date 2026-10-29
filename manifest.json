@@ -9,7 +9,7 @@
     "de": "Wie gut sind deine Daten gesichert? Ampel je Bereich, letzte und nächste Sicherung, offene Fehlschläge mit „Erneut ausführen“ – dazu alle geplanten Sicherungen als Ablauf oder Monatskalender, Export und Abo (.ics). Und Hostwerks externe Sicherung zusätzlich in die Cloud: OneDrive, Google Drive, S3 (AWS, Cloudflare R2, Backblaze …), Nextcloud/WebDAV oder SFTP – auf diesem PC verschlüsselt, mit Wiederherstellungs-Schlüssel und Wiederherstellungs-Probe.",
     "en": "How well is your data backed up? A traffic light per area, last and next backup, open failures with “Run again” – plus every planned backup as a timeline or month calendar, export and subscription (.ics). And Hostwerk’s external backup into the cloud as well: OneDrive, Google Drive, S3 (AWS, Cloudflare R2, Backblaze …), Nextcloud/WebDAV or SFTP – encrypted on this PC, with recovery key and restore probe."
   },
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "Hostwerk",
   "homepage": "https://github.com/Passimoritz/hostwerk-ext-backup-calendar",
   "license": "MIT",

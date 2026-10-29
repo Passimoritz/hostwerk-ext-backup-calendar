@@ -77,8 +77,8 @@ function createService(host) {
     for (const s of mcs()) { const n = s.nightlyBackup; if (n && n.enabled && n.lastError && n.lastRun >= since) out.push({ t: n.lastRun, id: `mc:${s.id}`, name: host.t('Minecraft backup: {name}', { name: s.name }), ok: false, error: n.lastError, kind: 'mc', href: HREF.mc(s.id), run: RUN.mc(s.id) }); }
     // External backup (Live → Backups → external) – going to the cloud, the cloud backup reports the same runs itself
     const o = offsite() || {};
-    const viaCloud = o.type === 'cloud' && ctx.cloudBackup && ctx.cloudBackup.history;
-    if (!viaCloud) for (const h of safe(() => o.history || [])) if (h.t >= since) out.push({ t: h.t, id: 'offsite', name: host.t('External backup'), ok: !!h.ok, error: h.error || null, kind: 'offsite', href: '#/live/backups', run: OFFSITE_RUN });
+    const viaCloud = (o.type === 'cloud' || o.type === 'backup-calendar:cloud') && ctx.cloudBackup && ctx.cloudBackup.history;
+    if (!viaCloud) for (const h of safe(() => o.history || [])) if (h.t >= since) out.push({ t: h.t, id: 'offsite', name: host.t('External backup'), ok: !!h.ok, error: h.error || null, kind: 'offsite', href: '#/live/sicherung', run: OFFSITE_RUN });
     // Cloud backup (part “Cloud” of this extension since 3.0, service cloudBackup)
     for (const h of cloudHistory()) if (h.t >= since) out.push({ t: h.t, id: 'cloud', name: h.name || host.t('Cloud backup'), ok: h.ok !== false, error: h.error || null, kind: 'cloud', href: '#/sicherungen/x-backup-calendar-cloud' });
     // Game server backups (extension "Game servers", service games) – unless it already reports them to the backup centre
@@ -149,8 +149,8 @@ function createService(host) {
     if (o) {
       const okRuns = (o.history || []).filter((h) => h && h.ok).map((h) => h.t);
       out.push(o.enabled
-        ? { area: 'offsite', svc: 'offsite', name: host.t('External backup'), last: o.lastError ? Math.max(0, ...okRuns) || null : o.lastRun || null, error: o.lastError || null, everyHours: o.everyHours || 24, planned: true, href: '#/live/backups', run: OFFSITE_RUN }
-        : { area: 'offsite', svc: 'offsite', name: host.t('External backup'), off: true, href: '#/live/backups' });
+        ? { area: 'offsite', svc: 'offsite', name: host.t('External backup'), last: o.lastError ? Math.max(0, ...okRuns) || null : o.lastRun || null, error: o.lastError || null, everyHours: o.everyHours || 24, planned: true, href: '#/live/sicherung', run: OFFSITE_RUN }
+        : { area: 'offsite', svc: 'offsite', name: host.t('External backup'), off: true, href: '#/live/sicherung' });
     }
     const cloud = cloudHistory().filter((h) => h && h.t).sort((a, b) => b.t - a.t);
     if (cloud.length) { const okC = cloud.find((h) => h.ok !== false); out.push({ area: 'offsite', svc: 'cloud', name: host.t('Cloud backup'), last: okC ? okC.t : null, error: cloud[0].ok === false ? cloud[0].error || host.t('failed') : null, planned: true, href: '#/sicherungen/x-backup-calendar-cloud' }); }

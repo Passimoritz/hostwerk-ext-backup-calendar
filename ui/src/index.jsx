@@ -239,7 +239,7 @@ function Setup({ targets, reload }) {
             <Mark area="offsite" />
             <b>Keep a copy outside this PC</b>
             <span className="small muted">{off.enabled ? t('External backup is on') : t('External drive, NAS or server – protects against a broken disk')}</span>
-            <a className="btn sm" href="#/live/backups"><ExternalLink />{off.enabled ? 'Open' : 'Set up'}</a>
+            <a className="btn sm" href="#/live/sicherung"><ExternalLink />{off.enabled ? 'Open' : 'Set up'}</a>
           </div>
         )}
       </div>
