@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.0
+
+- Backups rebuilt (Hostwerk with SDK 3.12): the calendar is a section in Backups → Schedule (#/sicherungen/zeitplan/calendar) – open failures and the light per area are on Hostwerk’s own Backups → Overview now, the section keeps the calendar, the templates and sharing (.ics); the own page still shows everything. The cloud backup is a section in Backups → Off-site (#/sicherungen/ausser-haus/cloud), Hostwerk with SDK 3.11 shows it under Go live → Backup. Older Hostwerk versions keep the tabs. / Sicherungen neu (Hostwerk mit SDK 3.12): Der Kalender ist ein Abschnitt unter Sicherungen → Zeitplan (#/sicherungen/zeitplan/calendar) – offene Fehler und die Ampel je Bereich stehen jetzt auf Hostwerks eigener Sicherungen → Lage, der Abschnitt behält Kalender, Vorlagen und Teilen (.ics); die eigene Seite zeigt weiter alles. Die Cloud-Sicherung ist ein Abschnitt unter Sicherungen → Außer Haus (#/sicherungen/ausser-haus/cloud), Hostwerk mit SDK 3.11 zeigt sie unter Livebetrieb → Sicherung. Ältere Hostwerk-Versionen behalten die Reiter.
+- Backups → Overview shows what only the cloud part knows: the recovery key was never noted down, or the last connection test failed (with “Test again”) – failed runs Hostwerk reports itself. / Sicherungen → Lage zeigt, was nur der Cloud-Teil weiß: Der Wiederherstellungs-Schlüssel wurde nie notiert, oder der letzte Verbindungstest schlug fehl (mit „Erneut testen“) – fehlgeschlagene Läufe meldet Hostwerk selbst.
+- Links point to the new addresses: Backups → Off-site, its cloud section and “What & when”, Restore → Test restore. / Links zeigen auf die neuen Adressen: Sicherungen → Außer Haus, dessen Cloud-Abschnitt und „Was & wann“, Zurückholen → Wiederherstellungs-Probe.
+
 ## 3.0.1
 
 - Links to the external backup point to its new place Go live → Backup (#/live/sicherung). / Links zur externen Sicherung zeigen auf ihren neuen Ort Livebetrieb → Sicherung (#/live/sicherung).

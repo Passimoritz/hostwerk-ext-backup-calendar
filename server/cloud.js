@@ -4,7 +4,7 @@
  * Same routes (/cloud-backup/…), data (data/cloud-backup) and service (cloudBackup) as before.
  *
  * Cloud backup – server part (SDK 2.7 native extension). Adds the target "cloud" to Hostwerk's external backup
- * (Live → Backups): schedule, retention, alerts and the restore probe stay in Hostwerk – this extension brings rclone,
+ * (Backups → Off-site; before SDK 3.12 Go live → Backup): schedule, retention, alerts and the restore probe stay in Hostwerk – this extension brings rclone,
  * the connection and the encryption.
  *   GET    /api/cloud-backup              → state (program, target, encryption, selected in Hostwerk?, runs, limits)
  *   POST   /api/cloud-backup/install      → job: download rclone (official, SHA-256 checked)
@@ -30,6 +30,8 @@ const { spawn } = require('child_process');
 const { Rclone, KINDS, tokenFrom, backupTime, validKey } = require('./rclone');
 
 const MAX_RUNS = 60;
+/** Section in Backups → Off-site (Hostwerk with SDK 3.12) */
+const SECTION_HREF = '#/sicherungen/ausser-haus/cloud';
 /** Form fields that are kept sealed and never shown again (the page gets •••••• back). */
 const SECRET_FIELDS = ['pass', 'secretKey', 'token', 'accessKey', 'clientSecret'];
 let state = null;
@@ -109,6 +111,22 @@ function mount(host) {
     history: () => (cfg().runs || []).map((r) => ({ t: r.t, ok: r.ok !== false, error: r.error || null, name: host.t('Cloud backup') })),
     status: () => { const v = view(); return { connected: v.connected, kind: v.kind, selected: v.selected, lastRun: v.lastRun, lastError: v.lastError }; },
   });
+
+  /**
+   * Points for Backups → Overview (SDK 3.12, host.contribute('backups.overview')) on the card "Off-site" – only what Hostwerk
+   * cannot know itself: the recovery key was never noted down, or the last connection test failed. Failed or overdue runs
+   * Hostwerk already reports for the off-site backup. From the stored settings only – no call to the cloud.
+   */
+  const overviewPoints = () => {
+    const c = cfg();
+    if (!c.kind || !rc.connected()) return [];
+    const out = [];
+    if (c.lastTest && c.lastTest.ok === false) out.push({ area: 'offsite', level: 'warn', title: host.t('Cloud backup'), detail: host.t('Connection test failed: {text}', { text: host.t(c.lastTest.text || 'failed') }), href: SECTION_HREF, action: { label: host.t('Test again'), path: '/cloud-backup/test', body: {} } });
+    if (c.key && !c.keySeen) out.push({ area: 'offsite', level: 'warn', title: host.t('Cloud backup'), detail: host.t('Note down the recovery key – without it the backups cannot be read on another PC.'), href: SECTION_HREF });
+    return out;
+  };
+  // New in SDK 3.12 – older Hostwerk versions do not know the type and throw
+  try { host.contribute('backups.overview', { list: () => overviewPoints() }); } catch { /* older Hostwerk */ }
 
   // Older versions kept S3 keys and passwords in rclone.conf: move them out once (needs the installed rclone)
   const migrate = async () => {

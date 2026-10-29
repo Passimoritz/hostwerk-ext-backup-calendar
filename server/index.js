@@ -6,7 +6,7 @@
  *   PUT  /api/backup-calendar/marks          { id, value: true | false | null } – "counts as a backup" per task
  *   POST /api/backup-calendar/ics-token      new subscription link (the old one stops working)
  *   GET  /api/backup-calendar/ics/<token>.ics  calendar to subscribe to (public route, secret link)
- * Sources besides Hostwerk's tasks: external backup (Live → Backups), cloud backup (extension "Cloud backup"),
+ * Sources besides Hostwerk's tasks: external backup (Backups → Off-site), cloud backup (extension "Cloud backup"),
  * game server backups (extension "Game servers"), restore probes and Hostwerk's backup centre (nightly backups of
  * databases and Minecraft servers, "Back up now", project snapshots, sources of other extensions).
  * Data: data/backup-calendar.json (marks, link token)
@@ -47,6 +47,10 @@ function createService(host) {
   };
   const HREF = { db: (id) => `#/dbs/${id}`, mc: (id) => `#/mc/${id}/backups`, snapshot: (id) => `#/projects/${id}/snapshots` };
   const OFFSITE_RUN = { path: '/live/monitor/offsite/run', body: {} };
+  // Hostwerk with SDK 3.12: Backups → Off-site, the cloud section there and Restore → Test restore (old addresses redirect)
+  const OFFSITE_HREF = '#/sicherungen/ausser-haus';
+  const CLOUD_HREF = '#/sicherungen/ausser-haus/cloud';
+  const PROBE_HREF = '#/sicherungen/zurueckholen/probe';
   const offsite = () => (ctx.monitor && ctx.monitor.offsite) || null;
   const cloudHistory = () => safe(() => (ctx.cloudBackup && ctx.cloudBackup.history ? ctx.cloudBackup.history() : []));
   const probeTargets = () => safe(() => (ctx.restoreProbe ? ctx.restoreProbe.targets() : []));
@@ -75,12 +79,12 @@ function createService(host) {
     // Failed nightly backups (no file then – Hostwerk keeps the error with the schedule)
     for (const d of dbs()) { const n = dbNightly(d.id); if (n && n.enabled && n.lastError && n.lastRun >= since) out.push({ t: n.lastRun, id: `db:${d.id}`, name: host.t('Database backup: {name}', { name: d.name }), ok: false, error: n.lastError, kind: 'db', href: HREF.db(d.id), run: RUN.db(d.id) }); }
     for (const s of mcs()) { const n = s.nightlyBackup; if (n && n.enabled && n.lastError && n.lastRun >= since) out.push({ t: n.lastRun, id: `mc:${s.id}`, name: host.t('Minecraft backup: {name}', { name: s.name }), ok: false, error: n.lastError, kind: 'mc', href: HREF.mc(s.id), run: RUN.mc(s.id) }); }
-    // External backup (Live → Backups → external) – going to the cloud, the cloud backup reports the same runs itself
+    // External backup (Backups → Off-site) – going to the cloud, the cloud backup reports the same runs itself
     const o = offsite() || {};
     const viaCloud = (o.type === 'cloud' || o.type === 'backup-calendar:cloud') && ctx.cloudBackup && ctx.cloudBackup.history;
-    if (!viaCloud) for (const h of safe(() => o.history || [])) if (h.t >= since) out.push({ t: h.t, id: 'offsite', name: host.t('External backup'), ok: !!h.ok, error: h.error || null, kind: 'offsite', href: '#/live/sicherung', run: OFFSITE_RUN });
+    if (!viaCloud) for (const h of safe(() => o.history || [])) if (h.t >= since) out.push({ t: h.t, id: 'offsite', name: host.t('External backup'), ok: !!h.ok, error: h.error || null, kind: 'offsite', href: OFFSITE_HREF, run: OFFSITE_RUN });
     // Cloud backup (part “Cloud” of this extension since 3.0, service cloudBackup)
-    for (const h of cloudHistory()) if (h.t >= since) out.push({ t: h.t, id: 'cloud', name: h.name || host.t('Cloud backup'), ok: h.ok !== false, error: h.error || null, kind: 'cloud', href: '#/sicherungen/x-backup-calendar-cloud' });
+    for (const h of cloudHistory()) if (h.t >= since) out.push({ t: h.t, id: 'cloud', name: h.name || host.t('Cloud backup'), ok: h.ok !== false, error: h.error || null, kind: 'cloud', href: CLOUD_HREF });
     // Game server backups (extension "Game servers", service games) – unless it already reports them to the backup centre
     if (!extSources.has('game-servers')) {
       for (const s of safe(() => (ctx.games && ctx.games.list ? ctx.games.list() : []))) {
@@ -149,16 +153,16 @@ function createService(host) {
     if (o) {
       const okRuns = (o.history || []).filter((h) => h && h.ok).map((h) => h.t);
       out.push(o.enabled
-        ? { area: 'offsite', svc: 'offsite', name: host.t('External backup'), last: o.lastError ? Math.max(0, ...okRuns) || null : o.lastRun || null, error: o.lastError || null, everyHours: o.everyHours || 24, planned: true, href: '#/live/sicherung', run: OFFSITE_RUN }
-        : { area: 'offsite', svc: 'offsite', name: host.t('External backup'), off: true, href: '#/live/sicherung' });
+        ? { area: 'offsite', svc: 'offsite', name: host.t('External backup'), last: o.lastError ? Math.max(0, ...okRuns) || null : o.lastRun || null, error: o.lastError || null, everyHours: o.everyHours || 24, planned: true, href: OFFSITE_HREF, run: OFFSITE_RUN }
+        : { area: 'offsite', svc: 'offsite', name: host.t('External backup'), off: true, href: OFFSITE_HREF });
     }
     const cloud = cloudHistory().filter((h) => h && h.t).sort((a, b) => b.t - a.t);
-    if (cloud.length) { const okC = cloud.find((h) => h.ok !== false); out.push({ area: 'offsite', svc: 'cloud', name: host.t('Cloud backup'), last: okC ? okC.t : null, error: cloud[0].ok === false ? cloud[0].error || host.t('failed') : null, planned: true, href: '#/sicherungen/x-backup-calendar-cloud' }); }
+    if (cloud.length) { const okC = cloud.find((h) => h.ok !== false); out.push({ area: 'offsite', svc: 'cloud', name: host.t('Cloud backup'), last: okC ? okC.t : null, error: cloud[0].ok === false ? cloud[0].error || host.t('failed') : null, planned: true, href: CLOUD_HREF }); }
     const pc = probeCfg();
     if (pc && pc.enabled) {
       for (const x of probeTargets()) {
         const r = x.last;
-        out.push({ area: 'probe', svc: x.key || x.name, name: x.name, last: r && r.ok ? r.at : null, error: r && !r.ok ? r.error || host.t('failed') : null, everyHours: (Number(pc.everyDays) || 7) * 24, planned: true, href: '#/sicherungen', run: x.key ? { path: '/restore-probe/run', body: { key: x.key } } : null });
+        out.push({ area: 'probe', svc: x.key || x.name, name: x.name, last: r && r.ok ? r.at : null, error: r && !r.ok ? r.error || host.t('failed') : null, everyHours: (Number(pc.everyDays) || 7) * 24, planned: true, href: PROBE_HREF, run: x.key ? { path: '/restore-probe/run', body: { key: x.key } } : null });
       }
     }
     // Backup tasks of any other kind (own scripts, commands …): their last run counts

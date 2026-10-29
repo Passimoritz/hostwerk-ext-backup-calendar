@@ -55,6 +55,38 @@ test('recovery key of another PC, bandwidth limits, nothing secret in the view',
   assert.deepStrictEqual(l.limits, { limit: 2.5, from: '08:00', to: '' });
 });
 
+test('3.1: points for Backups → Overview – recovery key not noted down, failed connection test; nothing without a connection', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cb-ov-'));
+  const contributed = {};
+  const routes = {};
+  const router = { get: (p, fn) => { routes[`GET ${p}`] = fn; }, post: () => {}, put: () => {}, delete: () => {} };
+  const ctx = { paths: { data: path.join(root, 'data'), bin: path.join(root, 'bin') }, monitor: { offsite: {} }, offsiteTargets: new Map(), settings: { save: () => {} } };
+  const host = {
+    ctx, router, t: (s, v) => (v ? String(s).replace(/\{(\w+)\}/g, (m, k) => (v[k] !== undefined ? v[k] : m)) : s),
+    error: (st, m) => Object.assign(new Error(m), { status: st }),
+    core: (name) => ({ jobs: { runJob: () => ({ id: 'j' }) }, util: { exec: async () => ({ code: 0, stdout: '' }) }, download: {}, secrets: { seal: (x) => x, open: (x) => x }, platform: {} }[name]),
+    provide: () => {}, broadcast: () => {}, log: () => {},
+    contribute: (type, o) => { contributed[type] = o; },
+  };
+  activate(host);
+  const list = () => contributed['backups.overview'].list({});
+  assert.deepStrictEqual(list(), [], 'not connected → no point');
+  // connected: rclone.conf with a remote, settings with kind, key (never shown) and a failed test
+  const dir = path.join(ctx.paths.data, 'cloud-backup');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'rclone.conf'), '[hwc]\ntype = crypt\n');
+  fs.writeFileSync(path.join(dir, 'settings.json'), JSON.stringify({ kind: 's3', key: 'k', keySeen: false, lastTest: { t: 1, ok: false, text: 'timeout' } }));
+  const p = list();
+  assert.strictEqual(p.length, 2);
+  assert.ok(p.every((x) => x.area === 'offsite' && x.level === 'warn' && x.href === '#/sicherungen/ausser-haus/cloud'));
+  assert.match(p[0].detail, /Connection test failed: timeout/);
+  assert.deepStrictEqual(p[0].action, { label: 'Test again', path: '/cloud-backup/test', body: {} });
+  assert.match(p[1].detail, /recovery key/);
+  fs.writeFileSync(path.join(dir, 'settings.json'), JSON.stringify({ kind: 's3', key: 'k', keySeen: true, lastTest: { t: 2, ok: true, text: 'ok' } }));
+  assert.deepStrictEqual(list(), [], 'key seen, test fine → nothing to say');
+  deactivate();
+});
+
 test('runs are remembered for the page and the backup calendar – failures included', async () => {
   const { ctx, provided, events } = setup();
   const target = ctx.offsiteTargets.get('cloud');

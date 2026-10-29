@@ -239,7 +239,7 @@ function Setup({ targets, reload }) {
             <Mark area="offsite" />
             <b>Keep a copy outside this PC</b>
             <span className="small muted">{off.enabled ? t('External backup is on') : t('External drive, NAS or server – protects against a broken disk')}</span>
-            <a className="btn sm" href="#/live/sicherung"><ExternalLink />{off.enabled ? 'Open' : 'Set up'}</a>
+            <a className="btn sm" href="#/sicherungen/ausser-haus"><ExternalLink />{off.enabled ? 'Open' : 'Set up'}</a>
           </div>
         )}
       </div>
@@ -386,7 +386,11 @@ function derive(d, month) {
   return { range, monthDays, sum, status, fails, empty, open, legend: L.AREAS.filter((a) => used.has(a)), results: L.lastResults(d.tasks, { onlyBackups, marks: d.marks }), startup: L.unscheduled(d.tasks, d.marks, { onlyBackups }), byId: new Map(d.tasks.map((x) => [x.id, x])) };
 }
 
-function Calendar2({ embedded }) {
+/**
+ * section: Abschnitt in Sicherungen → Zeitplan (Hostwerk mit SDK 3.12). Offene Fehler und die Ampel je Bereich zeigt dort schon
+ * Hostwerks Lage (#/sicherungen) – der Abschnitt bringt nur, was dazukommt: Kalender, Vorlagen, Teilen (.ics).
+ */
+function Calendar2({ embedded, section = false }) {
   const st = useCalendarData();
   const [view, setView] = useState('agenda');
   const [month, setMonth] = useState(() => Date.now());
@@ -428,8 +432,8 @@ function Calendar2({ embedded }) {
   return (
     <div className={`bc ${embedded ? 'bc-embedded' : ''}`}>
       {st.error && <Callout kind="warn" dismissible={false}>{t('Could not refresh: {error}', { error: st.error })}</Callout>}
-      <Failures list={x.fails} byId={x.byId} reload={st.reload} />
-      {!x.empty && <StatusHead sum={x.sum} status={x.status} targets={d.targets || {}} byId={x.byId} reload={st.reload} onSetup={() => setShowSetup(true)} />}
+      {!section && <Failures list={x.fails} byId={x.byId} reload={st.reload} />}
+      {!section && !x.empty && <StatusHead sum={x.sum} status={x.status} targets={d.targets || {}} byId={x.byId} reload={st.reload} onSetup={() => setShowSetup(true)} />}
       {setup && <Setup targets={d.targets || {}} reload={st.reload} />}
       {!setup && x.open && (
         <div className="bc-hint small">
@@ -443,6 +447,7 @@ function Calendar2({ embedded }) {
           <CalendarDays size={16} />
           <h3 id="bc-plan-h" className="grow">{view === 'agenda' ? t('Next {n} days', { n: d.settings.days }) : t('Month')}</h3>
           <Seg value={view} onChange={setView} options={[{ id: 'agenda', label: 'Agenda' }, { id: 'month', label: 'Month' }]} />
+          {section && !setup && !x.open && <Btn className="sm ghost" icon={Sparkles} onClick={() => setShowSetup(true)}>Show templates</Btn>}
           <Btn className="sm ghost" icon={ListChecks} onClick={() => setDialog('marks')}>Which tasks count …</Btn>
           {x.results.length > 0 && <Btn className="sm ghost" icon={FileText} onClick={() => setDialog('results')}>Last results …</Btn>}
           <Btn className="sm ghost" icon={Share2} aria-haspopup="menu" onClick={share}>Share</Btn>
@@ -488,7 +493,7 @@ function BackupCalendarPage() {
           <h1><Calendar /> Backup calendar <InfoTip pop title="Backup calendar">All scheduled backups – tasks, nightly backups, external backup and restore probes – and whether the last ones worked. Failures come first.</InfoTip></h1>
           <p>Every planned backup in one calendar – and whether the last ones worked.</p>
         </div>
-        <div className="actions"><a className="btn sm ghost" href="#/sicherungen/x-backup-calendar-cloud">{t('Cloud backup')}</a></div>
+        <div className="actions"><a className="btn sm ghost" href="#/sicherungen/ausser-haus/cloud">{t('Cloud backup')}</a></div>
       </div>
       <Calendar2 />
     </div>
@@ -518,15 +523,32 @@ function BackupTile() {
   );
 }
 
+/** Die ganze Cloud-Seite als Abschnitt: wie beim Reiter ohne eigenen Titelblock (.ext-embedded), die Knöpfe bleiben. */
+function CloudSection() {
+  return <div className="ext-embedded"><CloudBackupPage /></div>;
+}
+const CLOUD = { id: 'cloud', title: 'Cloud backup', icon: CloudUpload, Component: CloudSection, order: 40 };
+
 export default {
   pages: { main: BackupCalendarPage },
+  sections: {
+    // 3.1 (Hostwerk mit SDK 3.12): Kalender in Sicherungen → Zeitplan (#/sicherungen/zeitplan/calendar), neben Hostwerks
+    // „Regelmäßige Sicherungen“; Cloud in Sicherungen → Außer Haus (#/sicherungen/ausser-haus/cloud), bei den Zielen.
+    // live.sicherung ist seit SDK 3.12 ein Alias von backups.ausserhaus (gleiche id → EIN Abschnitt); Hostwerk mit SDK 3.11
+    // zeigt die Cloud dort unter Livebetrieb → Sicherung, wo die Sicherung außer Haus noch steht.
+    'backups.zeitplan': [{ id: 'calendar', title: 'Calendar', icon: Calendar, Component: () => <Calendar2 embedded section /> }],
+    'backups.ausserhaus': [CLOUD],
+    'live.sicherung': [CLOUD],
+  },
   slots: {
     'dashboard.tiles': [{ id: 'next', title: 'Backups', icon: Calendar, size: 'third', Component: BackupTile }],
-    // Tab in Hostwerk's backup area (#/sicherungen/x-backup-calendar-calendar)
+    // Ältere Hostwerk: Reiter unter Sicherungen (#/sicherungen/x-backup-calendar-calendar). Hostwerk 3.12 lässt beide von selbst
+    // weg, weil diese Erweiterung Abschnitte liefert.
     'backups.tabs': [
+      // Bewusst OHNE fallback: true – Hostwerk 3.10/3.11 blenden fallback-Reiter aus, kennen backups.zeitplan aber noch nicht
       { id: 'calendar', title: 'Calendar', icon: Calendar, Component: () => <Calendar2 embedded /> },
-      // 3.0: Teil „Cloud“ (bis 1.5 eigene Erweiterung „Cloud-Sicherung“, gleicher Platz unter Sicherungen)
-      { id: 'cloud', title: 'Cloud backup', icon: CloudUpload, Component: CloudBackupPage, order: 40 },
+      // 3.0: Teil „Cloud“ (bis 1.5 eigene Erweiterung „Cloud-Sicherung“). fallback: true – ab SDK 3.11 steht der Abschnitt live.sicherung
+      { id: 'cloud', title: 'Cloud backup', icon: CloudUpload, Component: CloudBackupPage, order: 40, fallback: true },
     ],
   },
 };

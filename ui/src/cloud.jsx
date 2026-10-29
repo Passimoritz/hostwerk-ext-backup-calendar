@@ -218,12 +218,12 @@ function CloudBackupPage() {
             <div className="stack cb-body">
               <div className="small row-tight"><ShieldCheck size={15} className="c-ok" />Hostwerk's external backup goes to the cloud.</div>
               {s.lastRun && <div className="small muted">{t('Last run: {when}', { when: when(s.lastRun) })}{s.lastError ? ` – ${s.lastError}` : ''}</div>}
-              <div><Btn className="sm ghost" icon={ArrowRight} onClick={() => { location.hash = '/live/sicherung'; }}>Schedule, retention and restore probe</Btn></div>
+              <div><Btn className="sm ghost" icon={ArrowRight} onClick={() => { location.hash = '/sicherungen/ausser-haus/plan'; }}>Schedule, retention and restore probe</Btn></div>
             </div>
           ) : (
             <div className="row-tight cb-wrap">
               <Btn className="primary" icon={CloudUpload} busy={busy === 'use'} disabled={!s.connected} onClick={use}>Use the cloud for the external backup</Btn>
-              <span className="small muted">You can change what is backed up and how often under Live → Backups.</span>
+              <span className="small muted">You can change what is backed up and how often under Backups → Off-site.</span>
             </div>
           )}
           {s.runs.length > 0 && (

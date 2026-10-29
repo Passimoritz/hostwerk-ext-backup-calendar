@@ -2,7 +2,7 @@
 
 # Backup calendar
 
-> **Since 3.0 with cloud backup:** this also contains the former extension “Cloud backup” – under Backups → Cloud backup, as before. Anyone who had it gets this version automatically; connection, key and runs stay.
+> **Since 3.0 with cloud backup:** this also contains the former extension “Cloud backup” – under Backups → Off-site → Cloud backup (older Hostwerk: Backups → Cloud backup). Anyone who had it gets this version automatically; connection, key and runs stay.
 
 How well is your data backed up – and what runs next? Open failures first, then one light per area, then the schedule.
 
@@ -12,7 +12,7 @@ How well is your data backed up – and what runs next? Open failures first, the
 
 ## What it does
 
-- **Where:** Backups → Calendar – no own sidebar entry since 2.1.1; the full page stays under Extensions → Open
+- **Where:** Backups → Schedule → Calendar and Backups → Off-site → Cloud backup (Hostwerk before SDK 3.12: the tabs Backups → Calendar and Backups → Cloud backup), points on Backups → Overview – no own sidebar entry since 2.1.1; the full page stays under Extensions → Open
 - Status head: last successful backup, next backup and one light per area (databases, Minecraft, projects, external, restore probes, extensions) – backed up, outdated, never backed up or failed; open an area for “Back up now” per database or server
 - Open failures at the top with “Log”, “Run again” or “Open” – a failure disappears once the same thing worked again
 - Schedule as a short agenda (empty days folded into one line) or as a month calendar with a mark per area; colour and shape per area with a legend

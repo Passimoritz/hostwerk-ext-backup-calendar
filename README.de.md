@@ -2,7 +2,7 @@
 
 # Sicherungs-Kalender
 
-> **Seit 3.0 mit Cloud-Sicherung:** Hier steckt auch die frühere Erweiterung „Cloud-Sicherung“ – unter Sicherungen → Cloud-Sicherung, wie bisher. Wer sie hatte, bekommt diese Fassung automatisch; Verbindung, Schlüssel und Läufe bleiben.
+> **Seit 3.0 mit Cloud-Sicherung:** Hier steckt auch die frühere Erweiterung „Cloud-Sicherung“ – unter Sicherungen → Außer Haus → Cloud-Sicherung (ältere Hostwerk: Sicherungen → Cloud-Sicherung). Wer sie hatte, bekommt diese Fassung automatisch; Verbindung, Schlüssel und Läufe bleiben.
 
 Wie gut sind deine Daten gesichert – und was läuft als Nächstes? Offene Fehlschläge zuerst, dann eine Ampel je Bereich, dann der Zeitplan.
 
@@ -12,7 +12,7 @@ Wie gut sind deine Daten gesichert – und was läuft als Nächstes? Offene Fehl
 
 ## Was sie kann
 
-- **Wo:** Sicherungen → Kalender – seit 2.1.1 ohne eigenen Seitenleisten-Eintrag; die ganze Seite bleibt unter Erweiterungen → Öffnen
+- **Wo:** Sicherungen → Zeitplan → Kalender und Sicherungen → Außer Haus → Cloud-Sicherung (Hostwerk vor SDK 3.12: die Reiter Sicherungen → Kalender und Sicherungen → Cloud-Sicherung), Punkte auf Sicherungen → Lage – seit 2.1.1 ohne eigenen Seitenleisten-Eintrag; die ganze Seite bleibt unter Erweiterungen → Öffnen
 - Status-Kopf: letzte erfolgreiche Sicherung, nächste Sicherung und eine Ampel je Bereich (Datenbanken, Minecraft, Projekte, extern, Wiederherstellungs-Proben, Erweiterungen) – gesichert, veraltet, nie gesichert oder fehlgeschlagen; ein Bereich klappt auf mit „Jetzt sichern“ je Datenbank oder Server
 - Offene Fehlschläge ganz oben mit „Protokoll“, „Erneut ausführen“ oder „Öffnen“ – ein Fehlschlag verschwindet, sobald dasselbe wieder geklappt hat
 - Zeitplan als kurzer Ablauf (leere Tage in einer Zeile zusammengefasst) oder als Monatskalender mit Markierung je Bereich; Farbe und Form je Bereich mit Legende
