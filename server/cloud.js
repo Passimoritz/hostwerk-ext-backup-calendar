@@ -113,7 +113,7 @@ function mount(host) {
   });
 
   /**
-   * Points for Backups → Overview (SDK 3.12, host.contribute('backups.overview')) on the card "Off-site" – only what Hostwerk
+   * Points for Backups → Status (SDK 3.12, host.contribute('backups.overview')) on the card "Off-site" – only what Hostwerk
    * cannot know itself: the recovery key was never noted down, or the last connection test failed. Failed or overdue runs
    * Hostwerk already reports for the off-site backup. From the stored settings only – no call to the cloud.
    */

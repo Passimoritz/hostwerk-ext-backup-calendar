@@ -55,7 +55,7 @@ test('recovery key of another PC, bandwidth limits, nothing secret in the view',
   assert.deepStrictEqual(l.limits, { limit: 2.5, from: '08:00', to: '' });
 });
 
-test('3.1: points for Backups → Overview – recovery key not noted down, failed connection test; nothing without a connection', async () => {
+test('3.1: points for Backups → Status – recovery key not noted down, failed connection test; nothing without a connection', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cb-ov-'));
   const contributed = {};
   const routes = {};
