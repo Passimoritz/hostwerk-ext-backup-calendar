@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, CircleDashed, Clock, CloudOff, CloudUpload, Database, ExternalLink, FileText, ListChecks, MinusCircle, Play, RotateCw, Share2, ShieldCheck, Sparkles, XCircle } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, CircleDashed, Clock, CloudOff, CloudUpload, Database, ExternalLink, FileText, ListChecks, MinusCircle, MoreHorizontal, Play, RotateCw, Share2, ShieldCheck, Sparkles, X, XCircle } from 'lucide-react';
 import { post, put, useApi, on } from '@hostwerk/api';
 import { Btn, Empty, Loading, Modal, TileEmpty, InfoTip, Seg, Switch, Callout, toast, confirmDialog } from '@hostwerk/ui';
 import * as HUI from '@hostwerk/ui';
@@ -100,7 +100,7 @@ function Row({ x, task, reload }) {
       <Mark area={L.areaOf(x)} label />
       <span className="bc-name">
         {x.name}
-        {x.count > 1 && <span className="muted small"> · {pl(x.count, '{n} run', '{n} runs')}</span>}
+        {x.count > 1 && <span className="muted small"> · {x.status === 'error' ? t('{n}× failed', { n: x.count }) : pl(x.count, '{n} run', '{n} runs')}</span>}
         {x.error && <span className="bc-errtext small">{x.error}</span>}
       </span>
       {x.status === 'ok' && <span className="badge ok">done</span>}
@@ -143,6 +143,31 @@ function MonthView({ month, setMonth, days, today, selected, onSelect }) {
   const byKey = new Map(days.map((d) => [d.key, d]));
   const shift = (n) => { const d = new Date(month); d.setDate(1); d.setMonth(d.getMonth() + n); setMonth(d.getTime()); };
   const names = Array.from({ length: 7 }, (_, i) => fmt(new Date(2024, 0, 1 + i).getTime(), { weekday: 'short' })); // 1.1.2024 was a Monday
+  // Arrow keys move between the days (roving tabindex: only one day is in the Tab order); beyond the month the month changes
+  const gridRef = useRef(null);
+  const focusNext = useRef(null);
+  const cells = grid.flat();
+  const current = cells.some((c) => c.key === selected) ? selected : (cells.find((c) => c.key === today) || cells.find((c) => c.inMonth)).key;
+  useEffect(() => {
+    if (!focusNext.current || !gridRef.current) return;
+    const el = gridRef.current.querySelector(`[data-day="${focusNext.current}"]`);
+    focusNext.current = null;
+    if (el) el.focus();
+  });
+  const onKey = (e, c) => {
+    const d = new Date(c.date);
+    const dow = (d.getDay() + 6) % 7;
+    const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7, Home: -dow, End: 6 - dow }[e.key];
+    let to = null;
+    if (step !== undefined) { to = new Date(d); to.setDate(d.getDate() + step); }
+    else if (e.key === 'PageUp' || e.key === 'PageDown') { to = new Date(d); to.setMonth(d.getMonth() + (e.key === 'PageUp' ? -1 : 1)); }
+    if (!to) return;
+    e.preventDefault();
+    const key = L.dayKey(to.getTime());
+    if (!cells.some((x) => x.key === key && x.inMonth)) setMonth(to.getTime());
+    focusNext.current = key;
+    onSelect(key);
+  };
   return (
     <div className="bc-month">
       <div className="bc-month-head">
@@ -150,17 +175,18 @@ function MonthView({ month, setMonth, days, today, selected, onSelect }) {
         <h3 className="grow bc-center" aria-live="polite">{fmt(month, { month: 'long', year: 'numeric' })}</h3>
         <button type="button" className="btn ghost sm icon" aria-label="Next month" title="Next month" onClick={() => shift(1)}><ChevronRight /></button>
       </div>
-      <div className="bc-grid" role="grid">
+      <div className="bc-grid" role="grid" ref={gridRef}>
         {names.map((n) => <div key={n} className="bc-dow tiny muted" role="columnheader">{n}</div>)}
-        {grid.flat().map((c) => {
+        {cells.map((c) => {
           const items = (byKey.get(c.key) || { items: [] }).items;
           const err = items.filter((x) => x.status === 'error').length;
           const ok = items.filter((x) => x.status === 'ok').length;
-          const plan = items.filter((x) => x.status === 'planned').length;
+          // Tasks that run several times a day are one entry with a count (L.calendar)
+          const plan = items.filter((x) => x.status === 'planned').reduce((n, x) => n + (x.count || 1), 0);
           const areas = [...new Set(items.map((x) => L.areaOf(x)))];
           const label = [fmt(c.date, { day: 'numeric', month: 'long' }), plan && t('{n} planned', { n: plan }), ok && t('{n} done', { n: ok }), err && t('{n} failed', { n: err })].filter(Boolean).join(', ');
           return (
-            <button key={c.key} type="button" role="gridcell" aria-label={label} title={label} aria-pressed={selected === c.key} className={`bc-cell ${c.inMonth ? '' : 'is-outside'} ${c.key === today ? 'is-today' : ''} ${selected === c.key ? 'is-selected' : ''} ${err ? 'has-error' : ''}`} onClick={() => onSelect(c.key)}>
+            <button key={c.key} type="button" role="gridcell" data-day={c.key} tabIndex={c.key === current ? 0 : -1} onKeyDown={(e) => onKey(e, c)} aria-label={label} title={label} aria-pressed={selected === c.key} className={`bc-cell ${c.inMonth ? '' : 'is-outside'} ${c.key === today ? 'is-today' : ''} ${selected === c.key ? 'is-selected' : ''} ${err ? 'has-error' : ''}`} onClick={() => onSelect(c.key)}>
               <span className="bc-num">{new Date(c.date).getDate()}</span>
               <span className="bc-marks" aria-hidden="true">{areas.slice(0, 4).map((a) => <Mark key={a} area={a} />)}{areas.length > 4 && <span className="tiny">+</span>}{err > 0 && <AlertTriangle className="bc-cell-err" />}</span>
             </button>
@@ -213,14 +239,19 @@ async function applyTemplate(id, targets, reload, only = null) {
   reload({ silent: true });
 }
 
-/** Quick start without any backup: up to three ready-made templates instead of empty cards. */
-function Setup({ targets, reload }) {
+/**
+ * Quick start without any backup: up to three ready-made templates instead of empty cards. onClose: opened by hand
+ * ("Show templates", "Set up backups") – then it can be closed again.
+ */
+function Setup({ targets, reload, onClose }) {
   const dbs = (targets.dbs || []).filter((x) => !x.covered);
   const mcs = (targets.mcs || []).filter((x) => !x.covered);
   const off = targets.offsite || {};
   return (
     <section className="card bc-setup" aria-labelledby="bc-setup-h">
-      <div className="card-head"><Sparkles size={16} /><h3 id="bc-setup-h">Set up backups</h3><InfoTip title="Set up backups">Each template creates normal tasks that you can change or delete any time under “Tasks”. Hostwerk recognises them as backups automatically.</InfoTip></div>
+      <div className="card-head"><Sparkles size={16} /><h3 id="bc-setup-h" className="grow">Set up backups</h3><InfoTip title="Set up backups">Each template creates normal tasks that you can change or delete any time under “Tasks”. Hostwerk recognises them as backups automatically.</InfoTip>
+        {onClose && <button type="button" className="btn ghost sm icon" aria-label="Close" title="Close" onClick={onClose}><X /></button>}
+      </div>
       <div className="card-body bc-tpls">
         <div className="bc-tpl">
           <Mark area="db" />
@@ -256,7 +287,7 @@ function AreaDetail({ a, targets, byId, reload }) {
         const task = e.task ? byId.get(e.task) : null;
         const tpl = !e.planned && (a.area === 'db' || a.area === 'mc') ? (a.area === 'db' ? 'db-nightly' : 'mc-daily') : null;
         return (
-          <li key={e.svc} className={`bc-row st-${e.state}`}>
+          <li key={e.svc} className={`bc-row st-${e.state}`} data-row-menu="">
             <Icon className="bc-st-ico" aria-hidden="true" />
             <span className="bc-name">
               {e.name}
@@ -377,7 +408,7 @@ function derive(d, month) {
   // The next backup may lie beyond the visible range (weekly probes, monthly cron) – look five weeks ahead
   const sum = L.summary(L.calendar(d.tasks, start.getTime(), 35, opts), { now, events: d.events, areas: d.areas || [] });
   const status = L.areaStatus(d.areas || [], { now });
-  const fails = L.failures(d.events, { now });
+  const fails = L.failures(d.events, { now, tasks: d.tasks });
   const used = new Set([...range, ...monthDays].flatMap((x) => x.items.map((i) => L.areaOf(i))));
   for (const a of status.areas) used.add(a.area);
   // Nothing set up yet: no backup task, no own schedule and nothing ever backed up
@@ -429,12 +460,21 @@ function Calendar2({ embedded, section = false }) {
     ]);
   };
   const setup = x.empty || showSetup;
+  // Rare things in a "More …" menu – the head stays on one line at 1024 px (also in the section)
+  const more = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    contextMenu({ preventDefault() {}, stopPropagation() {}, clientX: r.left, clientY: r.bottom + 4 }, [
+      section && !setup && !x.open && { label: t('Show templates'), icon: Sparkles, onClick: () => setShowSetup(true) },
+      { label: t('Which tasks count …'), icon: ListChecks, onClick: () => setDialog('marks') },
+      x.results.length > 0 && { label: t('Last results …'), icon: FileText, onClick: () => setDialog('results') },
+    ].filter(Boolean));
+  };
   return (
     <div className={`bc ${embedded ? 'bc-embedded' : ''}`}>
       {st.error && <Callout kind="warn" dismissible={false}>{t('Could not refresh: {error}', { error: st.error })}</Callout>}
       {!section && <Failures list={x.fails} byId={x.byId} reload={st.reload} />}
       {!section && !x.empty && <StatusHead sum={x.sum} status={x.status} targets={d.targets || {}} byId={x.byId} reload={st.reload} onSetup={() => setShowSetup(true)} />}
-      {setup && <Setup targets={d.targets || {}} reload={st.reload} />}
+      {setup && <Setup targets={d.targets || {}} reload={st.reload} onClose={x.empty ? null : () => setShowSetup(false)} />}
       {!setup && x.open && (
         <div className="bc-hint small">
           <Sparkles size={14} aria-hidden="true" />
@@ -447,11 +487,12 @@ function Calendar2({ embedded, section = false }) {
           <CalendarDays size={16} />
           <h3 id="bc-plan-h" className="grow">{view === 'agenda' ? t('Next {n} days', { n: d.settings.days }) : t('Month')}</h3>
           <Seg value={view} onChange={setView} options={[{ id: 'agenda', label: 'Agenda' }, { id: 'month', label: 'Month' }]} />
-          {section && !setup && !x.open && <Btn className="sm ghost" icon={Sparkles} onClick={() => setShowSetup(true)}>Show templates</Btn>}
-          <Btn className="sm ghost" icon={ListChecks} onClick={() => setDialog('marks')}>Which tasks count …</Btn>
-          {x.results.length > 0 && <Btn className="sm ghost" icon={FileText} onClick={() => setDialog('results')}>Last results …</Btn>}
-          <Btn className="sm ghost" icon={Share2} aria-haspopup="menu" onClick={share}>Share</Btn>
-          <InfoTip pop title="Share the calendar">Export saves the next weeks as a .ics file. The subscription link keeps Outlook, Google, Apple or Thunderbird up to date (“subscribe to calendar” / “add from URL”). It works on this PC – from outside only through Hostwerk’s remote access. Anyone with the link sees the names of your backup tasks.</InfoTip>
+          <Btn className="sm ghost" icon={MoreHorizontal} aria-haspopup="menu" onClick={more}>More …</Btn>
+          {/* Share and its ⓘ wrap together – the ⓘ never stands alone on a line (1024 px, section) */}
+          <span className="bc-share">
+            <Btn className="sm ghost" icon={Share2} aria-haspopup="menu" onClick={share}>Share</Btn>
+            <InfoTip pop title="Share the calendar">Export saves the next weeks as a .ics file. The subscription link keeps Outlook, Google, Apple or Thunderbird up to date (“subscribe to calendar” / “add from URL”). It works on this PC – from outside only through Hostwerk’s remote access. Anyone with the link sees the names of your backup tasks.</InfoTip>
+          </span>
         </div>
         <div className="card-body bc-plan-body" tabIndex={0} role="region" aria-labelledby="bc-plan-h">
           {view === 'agenda'
@@ -510,7 +551,7 @@ function BackupTile() {
   const start = new Date(); start.setHours(0, 0, 0, 0);
   const opts = { onlyBackups: true, marks: d.marks, events: d.events, plans: d.plans || [], now };
   const sum = L.summary(L.calendar(d.tasks, start.getTime(), 35, opts), { now, events: d.events, areas: d.areas || [] });
-  const bad = L.failures(d.events, { now });
+  const bad = L.failures(d.events, { now, tasks: d.tasks });
   if (!sum.next && !sum.lastOk && !bad.length) return <TileEmpty icon={Calendar} text="No backup planned" href="#/ext/backup-calendar" action={t('Set up')} />;
   return (
     <a className="card-body stack bc-tile" href="#/ext/backup-calendar">
@@ -523,9 +564,9 @@ function BackupTile() {
   );
 }
 
-/** Die ganze Cloud-Seite als Abschnitt: wie beim Reiter ohne eigenen Titelblock (.ext-embedded), die Knöpfe bleiben. */
+/** Die ganze Cloud-Seite als Abschnitt: ohne eigenen Seitenkopf (Hostwerks Karte zeigt den Titel, das ⓘ wandert dorthin). */
 function CloudSection() {
-  return <div className="ext-embedded"><CloudBackupPage /></div>;
+  return <div className="ext-embedded"><CloudBackupPage section /></div>;
 }
 const CLOUD = { id: 'cloud', title: 'Cloud backup', icon: CloudUpload, Component: CloudSection, order: 40 };
 

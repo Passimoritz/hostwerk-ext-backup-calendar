@@ -65,3 +65,50 @@ test('iCalendar file', () => {
   assert.strictEqual((f.match(/BEGIN:VEVENT/g) || []).length, 2);
   assert.ok(f.endsWith('END:VCALENDAR\r\n'));
 });
+
+test('cron: Sunday as 7, also inside ranges', () => {
+  const days = (expr) => L.runsBetween({ enabled: true, schedule: { mode: 'cron', expr } }, NOW, NOW + 7 * 86400000).map((x) => new Date(x).getDay()).sort();
+  assert.deepStrictEqual(days('0 3 * * 7'), [0]);
+  assert.deepStrictEqual(days('0 3 * * 5-7'), [0, 5, 6]);
+  assert.deepStrictEqual(days('0 3 * * 1-7'), [0, 1, 2, 3, 4, 5, 6]);
+});
+
+test('tasks running several times a day: one entry per day with a count, also beyond 40 runs', () => {
+  const hourly = { id: 'h', name: 'Hourly', enabled: true, action: { type: 'backup-db' }, schedule: { mode: 'cron', expr: '0 * * * *' } };
+  const daily = { id: 'd', name: 'Daily', enabled: true, action: { type: 'backup-db' }, schedule: { mode: 'daily', time: '03:00' } };
+  assert.strictEqual(L.frequent(hourly), true);
+  assert.strictEqual(L.frequent(daily), false);
+  assert.strictEqual(L.frequent({ schedule: { mode: 'every', minutes: 2880 } }), false);
+  const days = L.calendar([hourly, daily], NOW, 42, { now: NOW });
+  const last = days[days.length - 1].items;
+  assert.ok(last.some((x) => x.id === 'd'), 'daily task still planned on day 42');
+  const h = last.filter((x) => x.id === 'h');
+  assert.strictEqual(h.length, 1);
+  assert.strictEqual(h[0].count, 24);
+});
+
+test('iCalendar folds by UTF-8 bytes, never inside a character', () => {
+  const name = 'Ä'.repeat(100) + '✓'.repeat(30);
+  const f = L.ics([{ items: [{ t: NOW, id: 'x', name, kind: 'task', status: 'planned' }] }], { now: NOW });
+  for (const line of f.split('\r\n')) assert.ok(Buffer.byteLength(line) <= 75, line);
+  assert.ok(f.replace(/\r\n /g, '').includes(`SUMMARY:${name}`));
+});
+
+test('error message of a failed run: last line, with the program message before "Exited with code"', () => {
+  assert.strictEqual(L.errorLine('a\r\nDisk full\nBeendet mit Code 1'), 'Disk full (Beendet mit Code 1)');
+  assert.strictEqual(L.errorLine('Database unreachable'), 'Database unreachable');
+  assert.strictEqual(L.errorLine('Exited with code 2'), 'Exited with code 2');
+  assert.strictEqual(L.errorLine(''), '');
+});
+
+test('task history events carry the program message of a failed command', () => {
+  const ev = L.taskEvents([{ id: 'a', name: 'A', action: { type: 'command' } }], { a: [{ at: NOW, status: 'error', output: 'Disk full\nBeendet mit Code 1' }] });
+  assert.strictEqual(ev[0].error, 'Disk full (Beendet mit Code 1)');
+});
+
+test('failures of tasks switched off no longer count', () => {
+  const ev = [{ t: NOW - 3600000, id: 'a', name: 'A', ok: false, kind: 'task', error: 'x' }];
+  assert.strictEqual(L.failures(ev, { now: NOW }).length, 1);
+  assert.strictEqual(L.failures(ev, { now: NOW, tasks: [{ id: 'a', enabled: false }] }).length, 0);
+  assert.strictEqual(L.failures(ev, { now: NOW, tasks: [{ id: 'a', enabled: true }] }).length, 1);
+});

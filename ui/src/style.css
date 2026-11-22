@@ -50,7 +50,8 @@
 .bc-area-detail { flex: 1 1 100%; min-width: 0; }
 .bc-area-detail:empty { display: none; }
 .bc-fact-btn { margin-top: var(--sp-1); }
-.bc-lights { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--sp-2); flex: 2 1 420px; min-width: 0; }
+/* auto-fit + cap: few areas get wide enough cards (no "not set up" in two lines next to empty columns) */
+.bc-lights { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 260px)); gap: var(--sp-2); flex: 2 1 420px; min-width: 0; }
 .bc-light { display: flex; align-items: flex-start; gap: var(--sp-2); text-align: left; padding: var(--sp-2) var(--sp-3); min-height: 44px; border: 1px solid var(--line); border-left-width: 4px; border-radius: var(--r-md); background: var(--surface); color: inherit; font: inherit; cursor: pointer; }
 .bc-light > .bc-mark { margin-top: 5px; }
 .bc-light:hover { background: var(--surface-2); }
@@ -74,6 +75,9 @@
 .bc-plan-body { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .bc-plan-body:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: -2px; }
 .bc-plan-head { flex-wrap: wrap; gap: var(--sp-2); }
+/* Title never squeezed into several lines by the buttons (1024 px) – the buttons wrap to the next line instead */
+.bc-plan-head > h3 { min-width: max-content; }
+.bc-share { display: inline-flex; align-items: center; gap: var(--sp-1); }
 .bc-agenda { display: grid; gap: var(--sp-3); }
 .bc-agday { display: grid; gap: var(--sp-1); }
 .bc-agday-head { margin: 0; font-size: var(--fs-sm); font-weight: 600; color: var(--text-2); }

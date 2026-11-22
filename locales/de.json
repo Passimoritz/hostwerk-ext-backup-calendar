@@ -309,5 +309,7 @@
   "Google is retiring the app that rclone shares among all users during 2026. With your own app (Google Cloud Console → APIs → Credentials → OAuth client of type “Desktop app”, Drive API switched on; Microsoft: app registration in Entra ID) the sign-in keeps working. Enter it before signing in.": "Google schaltet die App, die sich alle rclone-Nutzer teilen, im Lauf von 2026 ab. Mit einer eigenen App (Google Cloud Console → APIs → Anmeldedaten → OAuth-Client vom Typ „Desktop-App“, Drive-API eingeschaltet; Microsoft: App-Registrierung in Entra ID) klappt die Anmeldung weiter. Vor dem Anmelden eintragen.",
   "Connection test failed: {text}": "Verbindungstest fehlgeschlagen: {text}",
   "Test again": "Erneut testen",
-  "Note down the recovery key – without it the backups cannot be read on another PC.": "Notiere den Wiederherstellungs-Schlüssel – ohne ihn lassen sich die Sicherungen auf einem anderen PC nicht lesen."
+  "Note down the recovery key – without it the backups cannot be read on another PC.": "Notiere den Wiederherstellungs-Schlüssel – ohne ihn lassen sich die Sicherungen auf einem anderen PC nicht lesen.",
+  "More …": "Mehr …",
+  "{n}× failed": "{n}× fehlgeschlagen"
 }

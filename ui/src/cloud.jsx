@@ -128,7 +128,11 @@ function Limits({ s, setData }) {
   );
 }
 
-function CloudBackupPage() {
+/**
+ * section: as a section in Backups → Off-site – Hostwerk's card already shows title and icon. Then no page head (it stayed
+ * as an empty bar above step 1); the ⓘ moves into the section's title by itself (InfoTip looks for the card heading).
+ */
+function CloudBackupPage({ section = false }) {
   const st = useApi('/cloud-backup', [], { live: false });
   const s = st.data;
   const [kind, setKind] = useState(null);
@@ -158,17 +162,18 @@ function CloudBackupPage() {
   const isOpen = (n) => (opened[n] !== undefined ? opened[n] : n === next);
   const toggle = (n) => setOpened({ ...opened, [n]: !isOpen(n) });
   const cur = s.kinds.find((x) => x.id === s.kind);
+  const how = <InfoTip title="How it works">Hostwerk keeps doing the backups (databases, Minecraft worlds, web pages) on its schedule. This extension only brings the cloud target: rclone uploads them, encrypted on this PC – the provider never sees the content.</InfoTip>;
   return (
     <div className="page fade-in">
-      <div className="page-head">
-        <div>
-          <h1><CloudUpload /> Cloud backup</h1>
-          <p>Hostwerk's external backup – encrypted to OneDrive, Google Drive, an S3 bucket, Nextcloud or an SFTP server.</p>
+      {!section && (
+        <div className="page-head">
+          <div>
+            <h1><CloudUpload /> Cloud backup</h1>
+            <p>Hostwerk's external backup – encrypted to OneDrive, Google Drive, an S3 bucket, Nextcloud or an SFTP server.</p>
+          </div>
+          <div className="actions">{how}</div>
         </div>
-        <div className="actions">
-          <InfoTip title="How it works">Hostwerk keeps doing the backups (databases, Minecraft worlds, web pages) on its schedule. This extension only brings the cloud target: rclone uploads them, encrypted on this PC – the provider never sees the content.</InfoTip>
-        </div>
-      </div>
+      )}
       {st.error && <Callout kind="warn" dismissible={false}>{t('Could not refresh: {error}', { error: st.error })}</Callout>}
       <div className="stack cb">
         <Step n={1} done={done[1]} title="Program" open={isOpen(1)} onToggle={() => toggle(1)} summary={s.installed ? t('rclone {version} is installed.', { version: s.installed }) : null}>
@@ -235,6 +240,7 @@ function CloudBackupPage() {
         </Step>
         {s.connected && <Limits s={s} setData={st.setData} />}
       </div>
+      {section && how}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use strict';
 /*
  * Part “Cloud” of the backup calendar (until 1.5 the own extension “Cloud backup”, merged with SDK 3.8 "replaces").
- * Same routes (/cloud-backup/…), data (data/cloud-backup) and service (cloudBackup) as before.
+ * Same routes (/cloud-backup/…) and service (cloudBackup) as before; data in host.dataDir/cloud (moved from data/cloud-backup).
  *
  * Cloud backup – server part (SDK 2.7 native extension). Adds the target "cloud" to Hostwerk's external backup
  * (Backups → Off-site; before SDK 3.12 Go live → Backup): schedule, retention, alerts and the restore probe stay in Hostwerk – this extension brings rclone,
@@ -46,7 +46,7 @@ function mount(host) {
   const { exec } = host.core('util');
   const dl = host.core('download');
   const secrets = host.core('secrets');
-  const dir = path.join(ctx.paths.data, 'cloud-backup');
+  const dir = require('./storage').storage(host).cloud; // host.dataDir/cloud (before 3.2: data/cloud-backup)
   const cfgFile = path.join(dir, 'settings.json');
   const cfg = () => { try { return JSON.parse(fs.readFileSync(cfgFile, 'utf8')); } catch { return {}; } };
   const save = (c) => { fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(`${cfgFile}.tmp`, JSON.stringify(c, null, 1)); fs.renameSync(`${cfgFile}.tmp`, cfgFile); };

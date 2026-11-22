@@ -9,20 +9,21 @@
  * Sources besides Hostwerk's tasks: external backup (Backups → Off-site), cloud backup (extension "Cloud backup"),
  * game server backups (extension "Game servers"), restore probes and Hostwerk's backup centre (nightly backups of
  * databases and Minecraft servers, "Back up now", project snapshots, sources of other extensions).
- * Data: data/backup-calendar.json (marks, link token)
+ * Data: host.dataDir/calendar.json (marks, link token) – moved there from data/backup-calendar.json (server/storage.js)
  */
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const L = require('../lib/calendar');
+const { storage } = require('./storage');
 
 const PAST_DAYS = 62;
 
 function createService(host) {
   const { ctx } = host;
-  const file = path.join(ctx.paths.data, 'backup-calendar.json');
+  const file = storage(host).calendar;
   const read = () => { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return { marks: {}, token: null }; } };
-  const write = (v) => { fs.writeFileSync(`${file}.tmp`, JSON.stringify(v, null, 1)); fs.renameSync(`${file}.tmp`, file); };
+  const write = (v) => { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(`${file}.tmp`, JSON.stringify(v, null, 1)); fs.renameSync(`${file}.tmp`, file); };
   const settings = () => {
     let s = {};
     try { s = ctx.extMarket.settingsFor(host.id) || {}; } catch { /* defaults */ }
@@ -165,10 +166,12 @@ function createService(host) {
         out.push({ area: 'probe', svc: x.key || x.name, name: x.name, last: r && r.ok ? r.at : null, error: r && !r.ok ? r.error || host.t('failed') : null, everyHours: (Number(pc.everyDays) || 7) * 24, planned: true, href: PROBE_HREF, run: x.key ? { path: '/restore-probe/run', body: { key: x.key } } : null });
       }
     }
-    // Backup tasks of any other kind (own scripts, commands …): their last run counts
+    // Backup tasks of any other kind (own scripts, commands …): their last run counts – a failure with its message (last
+    // line of the output, as in the calendar), not only "failed" twice
+    const lastError = (id) => { const h = safe(() => ctx.scheduler.history(id))[0]; return h && h.status === 'error' ? L.errorLine(h.output) || null : null; };
     for (const t of tasksList) {
       if (!t.enabled || L.taskArea(t) !== 'other' || !L.isBackup(t, marks)) continue;
-      out.push({ area: 'other', svc: t.id, name: t.name, task: t.id, last: t.lastRun && t.lastStatus !== 'error' ? t.lastRun : null, error: t.lastStatus === 'error' ? host.t('Last run failed') : null, planned: true });
+      out.push({ area: 'other', svc: t.id, name: t.name, task: t.id, last: t.lastRun && t.lastStatus !== 'error' ? t.lastRun : null, error: t.lastStatus === 'error' ? lastError(t.id) || host.t('Last run failed') : null, planned: true });
     }
     return out;
   };

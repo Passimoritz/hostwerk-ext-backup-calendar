@@ -31,7 +31,7 @@ Native extensions run as part of Hostwerk (own server and interface part). That 
 
 ## Data
 
-`data/backup-calendar.json` – your marks and the subscription link. The calendar itself comes from Hostwerk’s tasks and backups.
+`data/extensions/native/backup-calendar/` – your marks, the subscription link (`calendar.json`) and the cloud set-up (`cloud/`); “Remove completely” deletes the folder. Older data from `data/backup-calendar.json` and `data/cloud-backup/` is moved there on start. The calendar itself comes from Hostwerk’s tasks and backups.
 
 ## Develop
 

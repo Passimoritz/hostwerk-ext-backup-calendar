@@ -31,7 +31,7 @@ Native Erweiterungen laufen als Teil von Hostwerk (eigener Server- und Oberfläc
 
 ## Daten
 
-`data/backup-calendar.json` – deine Markierungen und der Abo-Link. Der Kalender selbst kommt aus Hostwerks Aufgaben und Sicherungen.
+`data/extensions/native/backup-calendar/` – deine Markierungen, der Abo-Link (`calendar.json`) und die Cloud-Einrichtung (`cloud/`); „Restlos entfernen“ löscht den Ordner. Ältere Daten aus `data/backup-calendar.json` und `data/cloud-backup/` werden beim Start dorthin verschoben. Der Kalender selbst kommt aus Hostwerks Aufgaben und Sicherungen.
 
 ## Entwickeln
 

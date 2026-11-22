@@ -119,3 +119,18 @@ test('relative time', () => {
   assert.deepStrictEqual(L.relTime(NOW + 6 * H, NOW), { unit: 'h', n: 6, past: false });
   assert.deepStrictEqual(L.relTime(NOW - 3 * 24 * H, NOW), { unit: 'd', n: 3, past: true });
 });
+
+test('several failures of the same task on one day become one entry with the newest error', () => {
+  const items = [
+    { t: NOW, id: 'a', name: 'DB', status: 'error', error: 'Disk full' },
+    { t: NOW + 3600000, id: 'b', name: 'Other', status: 'ok' },
+    { t: NOW + 7200000, id: 'a', name: 'DB', status: 'error', error: 'Locked' },
+    { t: NOW + 9000000, id: 'a', name: 'DB', status: 'error', error: 'Timeout' },
+  ];
+  const c = L.collapseEvery(items);
+  assert.strictEqual(c.length, 2);
+  assert.strictEqual(c[0].count, 3);
+  assert.strictEqual(c[0].until, NOW + 9000000);
+  assert.strictEqual(c[0].error, 'Timeout');
+  assert.strictEqual(L.collapseEvery([items[0]])[0].count, 1, 'a single failure stays a single entry');
+});
